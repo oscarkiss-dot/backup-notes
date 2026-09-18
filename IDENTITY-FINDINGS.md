@@ -58,6 +58,13 @@ Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Micro
 ### OneDrive Business Account Slot
 - Registry shows an empty `Business1` account slot configured under OneDrive Accounts (capability present, not populated with active details in this export)
 
+## App Center Root Org Trace (Resolved via Azure CLI)
+- Installed Azure CLI locally and logged in as `Oszkar@OscarKisshotmail465.onmicrosoft.com` (Default Directory tenant).
+- Confirmed: `az account show` → tenant `c194dd61-7e9f-432c-b107-a45c8f0a7af0` ("Default Directory"), domain `OscarKisshotmail465.onmicrosoft.com`, subscription `57c25f8f-b37a-4455-bae8-6991b87c7213`.
+- Queried the App Center service principal (`appId 6201c56d-46d7-4152-bdb6-e0c77193784b`): verified Microsoft-published, multi-tenant app. In Default Directory its object ID is `28babf45-2e44-45f0-a732-a469d72fefa4` — **does not match** the original object ID (`faf4a9e5-1e7f-44c4-85b8-e0ebb46313dd`), meaning that specific instance belongs to the **MyWorkSpace** tenant (`14711b58-546b-466f-97d6-38528f6a109c`) instead.
+- Attempted to log into MyWorkSpace via device code to confirm directly, but was blocked by an MFA (authenticator app) prompt the user could not complete — no authenticator device access for that tenant. No safe bypass exists.
+- **Conclusion:** Root org for the App Center link is most likely **MyWorkSpace** (`14711b58-546b-466f-97d6-38528f6a109c`), based on process of elimination against the confirmed Default Directory result. Direct confirmation remains pending until authenticator access to MyWorkSpace is recovered.
+
 ## Findings by Category
 
 | Category | Detail | Source |
