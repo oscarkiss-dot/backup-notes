@@ -114,6 +114,12 @@ Only one member exists on this org - **confirms Osie Black is solely owned/contr
 | Azure subscription 1 | `57c25f8f-b37a-4455-bae8-6991b87c7213` | `c194dd61-...` (domain 465) |
 
 **Important cross-link:** this confirms both previously-separate Entra tenants (`c8553249-...` and `c194dd61-...`) are linked to the *same* App Center organization ("Osie Black"), both under the user's own control. Azure AD is not yet "Connected" for this org (button available but unused).
+
+### FINAL RESOLUTION - Osie Black is a self-created test artifact (user-confirmed)
+
+User confirmed directly: "Osie Black" is an org **they created themselves** while experimenting with App Center, and the linked email (`Oscar.Kiss@hotmail.com`) is their own personal email - not a third party, breach, or unknown actor. User intends to delete the apps ("Mac", "TextPlus") and the org itself as cleanup.
+
+**Status: RESOLVED / NOT A SECURITY CONCERN.** No further investigation needed on this org unless new evidence emerges. Cleanup steps (for user reference): delete each app under Settings > Delete app, then Manage > Settings > Delete organization.
 ## Findings by Category
 
 | Category | Detail | Source |
@@ -156,3 +162,5 @@ Only one member exists on this org - **confirms Osie Black is solely owned/contr
 - Decode 6 MAPI GUIDs in Outlook profile via MFCMAPI to reveal linked accounts
 - Identify LAN device at `192.168.137.10`
 - Cross-reference Edge encrypted keys with Credential Manager entries
+- Identify the separate lowercase `osie black` entity in the App Center sidebar (distinct icon from "Osie Black" org) - not yet clicked into
+- ~~Resolve "Osie Black" App Center org and "TextPlus" app~~ **RESOLVED**: user-confirmed self-created test org/app, scheduled for deletion, not a security concern
