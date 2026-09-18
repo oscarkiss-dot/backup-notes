@@ -10,6 +10,35 @@ _Last updated: 2026-09-18_
 - `pianist_oscer@outlook.com`
 - `michellekiss2026@outlook.com`
 - `private-love@private-love.com`
+- `andrea.lakatos@windowslive.com` (found in IdentityCRL registry)
+- `OszkarKiss@MyWorkSpace67.onmicrosoft.com` (workplace tenant identity)
+- `Admin@OscarKisshotmail465.onmicrosoft.com` (workplace tenant identity)
+
+## Second Windows Profile: C:\Users\oscar
+A second local Windows user profile was discovered and confirmed by the user as self-owned/self-inspected. It contains a pre-existing, well-designed self-inspection toolkit (`IdentityEvidenceCollector.ps1`, `DeepIdentityDriveCollector.ps1`) plus generated evidence bundles and Wireshark packet captures of the user's own iPhone traffic.
+
+### Workplace-Joined Tenants (from `dsregcmd /status` + registry)
+| Tenant ID | Display Name | Linked Email | Device Cert Validity |
+|---|---|---|---|
+| `14711b58-546b-466f-97d6-38528f6a109c` | MyWorkSpace | OszkarKiss@MyWorkSpace67.onmicrosoft.com | 2026-07-11 → 2036-07-11 (TPM-protected) |
+| `c194dd61-7e9f-432c-b107-a45c8f0a7af0` | Default Directory | Admin@OscarKisshotmail465.onmicrosoft.com | 2026-07-14 → 2036-07-14 (TPM-protected) |
+
+### Browser Profiles (Edge)
+- Profile 1: `oscar.kiss@hotmail.com` (Oscar Kiss)
+- Profile 2: `Admin@OscarKisshotmail465.onmicrosoft.com` (Admin)
+
+### Local Windows Accounts on DESKTOP-V1BDUNP
+Administrator, CodexSandboxOffline, CodexSandboxOnline, DefaultAccount, Guest, LENOVO, oscar, WDAGUtilityAccount, WsiAccount
+
+### Notable Installed Identity/Cloud Apps
+Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Microsoft.MicrosoftOfficeHub, Microsoft.OneDriveSync
+
+### Other Artifacts
+- OAuth app "outlook gemini": clientId `595cd25b-78f9-4580-85c8-67ff961dc327`, secretId `f8ba1288-e43b-48bb-b231-64ebf10980ab` (secret values redacted in source file)
+- Expired Apple iPhone Device CA certificate (exp. 1/24/2020)
+- Duplicate PST files (`Outlook1.pst`, `Oscar.Kiss@hotmail.com.pst`, both 271KB)
+- Suspicious `.eml`: "Re_ Important_ your vehicle is no longer taxed" — potential phishing, recommend review/deletion
+- 15 Wireshark `.pcapng` captures of self-owned devices (largest 90.9MB), ETW system trace logs — self-inspection network tooling
 
 ## Findings by Category
 
