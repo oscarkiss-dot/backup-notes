@@ -177,3 +177,18 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 - Cross-reference Edge encrypted keys with Credential Manager entries
 - Identify the separate lowercase `osie black` entity in the App Center sidebar (distinct icon from "Osie Black" org) - not yet clicked into
 - ~~Resolve "Osie Black" App Center org and "TextPlus" app~~ **RESOLVED**: user-confirmed self-created test org/app, scheduled for deletion, not a security concern
+
+## Investigation Scope & Standing Directive (2026-09-18)
+
+**Anchor identity:** "Osie Black" (App Center org, `appcenter.ms/orgs/Osie-Black`) and the broader Oscar Kiss / Oszkar / OZ alias cluster remain the central reference point for this entire investigation. Every new finding, across every provider, should be checked for association/relevancy back to this identity before being logged.
+
+**Standing directive:** maintain persistent, cross-device memory of all findings. This file (`IDENTITY-FINDINGS.md`, pushed to `oscarkiss-dot/backup-notes`) is the durable source of truth across sessions/devices. Continue appending here as investigation expands.
+
+**Planned scope expansion (not yet started):**
+| Provider | Status | Notes |
+|---|---|---|
+| Microsoft / Azure / Entra / App Center | Active | Root anchor - tenant `c8553249-...`, subscription `f2aa2ed7-...`, App Center org "Osie Black" |
+| Google Workspace | Planned | Check for a linked Workspace/GSuite tenant or migration tied to same identity/aliases |
+| AWS | Planned | Check for IAM users/accounts tied to same email aliases or Osie Black identity |
+| Oracle Cloud | Planned | Check for OCI accounts tied to same identity |
+| Other (GitHub orgs, Apple/iCloud, etc.) | Reserved | Add as they come up; cross-reference against the same alias cluster |
