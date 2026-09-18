@@ -89,6 +89,31 @@ Resolution notes:
 - An earlier elimination-based guess incorrectly pointed to "MyWorkSpace" - corrected here with direct proof.
 - Open item: the separate lowercase `osie black` entity in the App Center sidebar has not yet been identified - recommend clicking into it to check its Settings page the same way.
 - Visual Studio App Center itself was retired 3/31/2025 (Analytics/Diagnostics supported until 3/31/2027) - org still exists but the product is in wind-down.
+
+### Osie Black Org - Apps, Ownership, and Azure Links (CONFIRMED via portal screenshots)
+
+**Apps in this org:**
+| Name | OS | Release Type | Role |
+|---|---|---|---|
+| Mac | macOS | - | Collaborator |
+| TextPlus | iOS | Enterprise | Collaborator |
+
+This **resolves the earlier "TextPlus" search** (previously not found in Entra app registrations or local installs): TextPlus is an App Center-managed iOS app project under the Osie Black org, not a locally installed program or Entra app registration.
+
+**Collaborators (People > Collaborator):**
+| Name | Email | Role |
+|---|---|---|
+| Oscar Kiss | Oscar.Kiss@hotmail.com | Admin |
+
+Only one member exists on this org - **confirms Osie Black is solely owned/controlled by the user**, not a shared or third-party organization.
+
+**Linked Azure Subscriptions (Manage > Azure):**
+| Subscription Name | Subscription ID | Tenant |
+|---|---|---|
+| Azure subscription 1 | `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` | `c8553249-...` (domain 201) |
+| Azure subscription 1 | `57c25f8f-b37a-4455-bae8-6991b87c7213` | `c194dd61-...` (domain 465) |
+
+**Important cross-link:** this confirms both previously-separate Entra tenants (`c8553249-...` and `c194dd61-...`) are linked to the *same* App Center organization ("Osie Black"), both under the user's own control. Azure AD is not yet "Connected" for this org (button available but unused).
 ## Findings by Category
 
 | Category | Detail | Source |
