@@ -58,6 +58,16 @@ Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Micro
 ### OneDrive Business Account Slot
 - Registry shows an empty `Business1` account slot configured under OneDrive Accounts (capability present, not populated with active details in this export)
 
+## Third Tenant Discovered: OscarKisshotmail201
+A **third, previously unseen** Microsoft tenant was surfaced via a user-provided portal screenshot:
+- **Subscription ID:** `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb`
+- **Directory:** "Default Directory", domain `OscarKisshotmail201.onmicrosoft.com`
+
+This is distinct from both previously confirmed tenants (`OscarKisshotmail465` "Default Directory" and "MyWorkSpace"). It suggests a **pattern of auto-generated per-signup tenants** tied to hotmail-based identities, each getting its own incrementing "OscarKisshotmailNNN" domain and a generic "Default Directory" display name.
+
+- Verified via `az account show --subscription f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb`: **not accessible** under the currently authenticated CLI session (only `465` is visible there).
+- This means the user is signed into the Azure Portal browser tab under a **different account/session** than the CLI. Confirming this tenant requires logging into it directly (same 3 alternative-auth options as MyWorkSpace apply here).
+
 ## App Center Root Org Trace (Resolved via Azure CLI)
 - Installed Azure CLI locally and logged in as `Oszkar@OscarKisshotmail465.onmicrosoft.com` (Default Directory tenant).
 - Confirmed: `az account show` → tenant `c194dd61-7e9f-432c-b107-a45c8f0a7af0` ("Default Directory"), domain `OscarKisshotmail465.onmicrosoft.com`, subscription `57c25f8f-b37a-4455-bae8-6991b87c7213`.
