@@ -120,6 +120,19 @@ Only one member exists on this org - **confirms Osie Black is solely owned/contr
 User confirmed directly: "Osie Black" is an org **they created themselves** while experimenting with App Center, and the linked email (`Oscar.Kiss@hotmail.com`) is their own personal email - not a third party, breach, or unknown actor. User intends to delete the apps ("Mac", "TextPlus") and the org itself as cleanup.
 
 **Status: RESOLVED / NOT A SECURITY CONCERN.** No further investigation needed on this org unless new evidence emerges. Cleanup steps (for user reference): delete each app under Settings > Delete app, then Manage > Settings > Delete organization.
+
+### Admin Activity Trace (Azure Activity Log + Entra Audit Log, tenant `c8553249-...`)
+
+Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directoryAudits` since only one Admin exists on this org (the user):
+
+| Source | Finding |
+|---|---|
+| Azure Activity Log | Repeated attempts (2026-09-16) to grant **Contributor** role on subscription `f2aa2ed7-...` to the App Center service principal (`faf4a9e5-...`) - failed with `RoleAssignmentExists` (already granted) |
+| Role Assignment (current) | App Center's app (`6201c56d-46d7-4152-bdb6-e0c77193784b`) currently holds **Contributor** on subscription `f2aa2ed7-...` - granted via App Center's "Connect to Azure AD" feature |
+| Cognitive Services Resource | `oscarkiss-2382-resource` (AI Services / Azure OpenAI-type, SKU S0, `westus3`) in `rg-oscar.kiss-2088`, created 2026-08-17 by `Oscar.Kiss@hotmail.com`; key-retrieval actions logged 2026-09-14 |
+| Entra Directory Audit Log | All recent actions (MFA policy updates, company info changes, app/service principal updates, app consents) initiated exclusively by `Oscar.Kiss@hotmail.com` / `live.com#Oscar.Kiss@hotmail.com` - **no third-party or unknown initiators found** |
+
+**Conclusion:** all admin activity in this tenant traces back solely to the user. The one actionable item is that App Center still retains broad **Contributor** access to the subscription from an old "Connect to Azure AD" action - recommend revoking this role assignment when the org/apps are deleted.
 ## Findings by Category
 
 | Category | Detail | Source |
