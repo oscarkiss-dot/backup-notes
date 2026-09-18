@@ -65,6 +65,11 @@ Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Micro
 - Attempted to log into MyWorkSpace via device code to confirm directly, but was blocked by an MFA (authenticator app) prompt the user could not complete — no authenticator device access for that tenant. No safe bypass exists.
 - **Conclusion:** Root org for the App Center link is most likely **MyWorkSpace** (`14711b58-546b-466f-97d6-38528f6a109c`), based on process of elimination against the confirmed Default Directory result. Direct confirmation remains pending until authenticator access to MyWorkSpace is recovered.
 
+### Alternative Auth Paths to Confirm MyWorkSpace (pending user choice)
+1. **App-only auth (recommended):** Register an app in the MyWorkSpace tenant portal (one-time, requires completing MFA there once), obtain Client ID + Client Secret + Tenant ID, then use `az login --service-principal -u <clientId> -p <clientSecret> --tenant <tenantId>` — no further MFA needed.
+2. **Different admin account:** Sign in via device code with any other account in that tenant that already has working authenticator/MFA access.
+3. **Bearer token reuse:** Paste a live Microsoft Graph access token (e.g. from Graph Explorer, valid ~1 hour) for direct `az rest` calls without a new login.
+
 ## Findings by Category
 
 | Category | Detail | Source |
