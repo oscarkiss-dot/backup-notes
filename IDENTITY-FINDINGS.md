@@ -40,6 +40,24 @@ Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Micro
 - Suspicious `.eml`: "Re_ Important_ your vehicle is no longer taxed" — potential phishing, recommend review/deletion
 - 15 Wireshark `.pcapng` captures of self-owned devices (largest 90.9MB), ETW system trace logs — self-inspection network tooling
 
+## Deep Scan Pass (2026-09-18): Network Device + Fresh Re-scan
+
+### LAN Device Identification
+- `192.168.137.10` is **not reachable** on the current network (current subnet: `192.168.2.x` via `mynetwork.home`).
+- `192.168.137.x` is the **default Windows Mobile Hotspot / ICS subnet** — this credential likely originates from a past mobile-hotspot/tethering session, not a persistent LAN device.
+
+### GitHub CLI Authentication
+- Logged in as **`oscarkiss-dot`**, scopes: `gist`, `project`, `read:org`, `repo`, `user`, `workflow`
+- Global git `user.name`/`user.email`/`credential.helper` are all unset
+
+### Third iOS Management Tool Discovered: 3uTools
+- Found at `C:\3uToolsV3` with `Backup`, `SocialBackup`, `CustomizedBackup`, `Firmware`/`Firmcache` folders
+- Confirms a third parallel iPhone management/backup toolchain (alongside iMazing and PhoneRescue)
+- **OneDrive Personal account UserFolder** registry value unusually points to `C:\3uToolsV3\OneDrive`
+
+### OneDrive Business Account Slot
+- Registry shows an empty `Business1` account slot configured under OneDrive Accounts (capability present, not populated with active details in this export)
+
 ## Findings by Category
 
 | Category | Detail | Source |
