@@ -58,28 +58,37 @@ Microsoft.AzureVpn, Microsoft.OutlookForWindows, AppleInc.iCloud, MSTeams, Micro
 ### OneDrive Business Account Slot
 - Registry shows an empty `Business1` account slot configured under OneDrive Accounts (capability present, not populated with active details in this export)
 
-## Third Tenant Discovered: OscarKisshotmail201
-A **third, previously unseen** Microsoft tenant was surfaced via a user-provided portal screenshot:
-- **Subscription ID:** `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb`
-- **Directory:** "Default Directory", domain `OscarKisshotmail201.onmicrosoft.com`
+## App Center Root Org Trace - CONFIRMED (Exact Match + Visual Proof)
 
-This is distinct from both previously confirmed tenants (`OscarKisshotmail465` "Default Directory" and "MyWorkSpace"). It suggests a **pattern of auto-generated per-signup tenants** tied to hotmail-based identities, each getting its own incrementing "OscarKisshotmailNNN" domain and a generic "Default Directory" display name.
+A fourth, previously unseen tenant was discovered and directly confirmed via Azure CLI login, resolving the original App Center object ID with an exact match. This was further confirmed visually via a user-provided screenshot of the App Center portal itself.
 
-- Verified via `az account show --subscription f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb`: **not accessible** under the currently authenticated CLI session (only `465` is visible there).
-- This means the user is signed into the Azure Portal browser tab under a **different account/session** than the CLI. Confirming this tenant requires logging into it directly (same 3 alternative-auth options as MyWorkSpace apply here).
+| Field | Value |
+|---|---|
+| App Center Object ID | `faf4a9e5-1e7f-44c4-85b8-e0ebb46313dd` - exact match to original request |
+| Root Org (Tenant ID) | `c8553249-62c8-409b-9e73-b496ed042686` |
+| Subscription ID | `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` (matches user-provided portal screenshot) |
+| Domain | `OscarKisshotmail201.onmicrosoft.com` |
+| Authenticated account | `Oscar.Kiss@hotmail.com` (primary identity) |
+| App owner org (Microsoft's own tenant) | `f8cdef31-a31e-4b4a-93e4-5f571e91255a` |
+| Service principal created | 2026-09-07T05:43:01Z |
+| Publisher | Microsoft Corporation (verified), multi-tenant app (`AzureADMultipleOrgs`) |
+| App Center Organization Name | "Osie Black" - `https://appcenter.ms/orgs/Osie-Black` |
 
-## App Center Root Org Trace (Resolved via Azure CLI)
-- Installed Azure CLI locally and logged in as `Oszkar@OscarKisshotmail465.onmicrosoft.com` (Default Directory tenant).
-- Confirmed: `az account show` → tenant `c194dd61-7e9f-432c-b107-a45c8f0a7af0` ("Default Directory"), domain `OscarKisshotmail465.onmicrosoft.com`, subscription `57c25f8f-b37a-4455-bae8-6991b87c7213`.
-- Queried the App Center service principal (`appId 6201c56d-46d7-4152-bdb6-e0c77193784b`): verified Microsoft-published, multi-tenant app. In Default Directory its object ID is `28babf45-2e44-45f0-a732-a469d72fefa4` — **does not match** the original object ID (`faf4a9e5-1e7f-44c4-85b8-e0ebb46313dd`), meaning that specific instance belongs to the **MyWorkSpace** tenant (`14711b58-546b-466f-97d6-38528f6a109c`) instead.
-- Attempted to log into MyWorkSpace via device code to confirm directly, but was blocked by an MFA (authenticator app) prompt the user could not complete — no authenticator device access for that tenant. No safe bypass exists.
-- **Conclusion:** Root org for the App Center link is most likely **MyWorkSpace** (`14711b58-546b-466f-97d6-38528f6a109c`), based on process of elimination against the confirmed Default Directory result. Direct confirmation remains pending until authenticator access to MyWorkSpace is recovered.
+### App Center Organizations Visible Under This Account (from screenshot)
+| Entity | Type |
+|---|---|
+| Oscar Kiss | Personal account |
+| MyWorkSpace | Organization |
+| Osie Black | Organization (confirmed root org for the App Center trace) |
+| osie black (lowercase) | Separate entity, distinct icon - likely another personal account; not yet fully identified |
 
-### Alternative Auth Paths to Confirm MyWorkSpace (pending user choice)
-1. **App-only auth (recommended):** Register an app in the MyWorkSpace tenant portal (one-time, requires completing MFA there once), obtain Client ID + Client Secret + Tenant ID, then use `az login --service-principal -u <clientId> -p <clientSecret> --tenant <tenantId>` — no further MFA needed.
-2. **Different admin account:** Sign in via device code with any other account in that tenant that already has working authenticator/MFA access.
-3. **Bearer token reuse:** Paste a live Microsoft Graph access token (e.g. from Graph Explorer, valid ~1 hour) for direct `az rest` calls without a new login.
-
+Resolution notes:
+- This tenant (`c8553249-...`) enforces Security Defaults / Conditional Access, which blocked the standard device-code flow (`AADSTS530035`) and required an interactive browser login instead.
+- Local browser settings cache (`settings.json`) independently corroborated this: a saved Azure Portal resource filter named "Osie Black" (`subscriptionName contains "Osie Black"`) tied to the same tenant ID, plus search history entries "Osie black", "Godaddy", "Mai", "Oz".
+- No Azure resource groups or management groups are named "Osie Black" in this tenant - confirms it is purely an App Center-level organization, not an Azure resource.
+- An earlier elimination-based guess incorrectly pointed to "MyWorkSpace" - corrected here with direct proof.
+- Open item: the separate lowercase `osie black` entity in the App Center sidebar has not yet been identified - recommend clicking into it to check its Settings page the same way.
+- Visual Studio App Center itself was retired 3/31/2025 (Analytics/Diagnostics supported until 3/31/2027) - org still exists but the product is in wind-down.
 ## Findings by Category
 
 | Category | Detail | Source |
