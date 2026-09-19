@@ -2,7 +2,7 @@
 
 Consolidated, read-only scan results from local PC filesystem, registry, and Windows Credential Manager. No passwords or secret values were extracted — only account identifiers, server endpoints, and artifact locations.
 
-_Last updated: 2026-09-18_
+_Last updated: 2026-09-19_
 
 ## Confirmed Email Identities
 - `Oscar.Kiss@hotmail.com` (primary)
@@ -139,6 +139,7 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 |---|---|---|
 | Azure | AzureStorageAccounts.csv export - header only, no storage accounts present | OneDrive\Documents\AzureStorageAccounts.csv |
 | Azure Activity | QueryResult.csv - Azure Activity Log query result, header only, no events | OneDrive\Documents\QueryResult.csv |
+| **Azure Foundry / AI Services** | **oscarkiss-2382-resource** (Foundry type, AI inference service), westus3, created 2026-08-17 by Oscar.Kiss@hotmail.com, subscription f2aa2ed7-..., resource group rg-oscar.kiss-2088. API Keys (KEY 1, KEY 2), Endpoint: https://oscarkiss-2382-resource.services.azure.com/. Standard Agent light-weight config. | Azure Portal 2026-09-19 |
 | Credential Manager | MicrosoftAccount SSO_POP_User: michellekiss2026@outlook.com | cmdkey /list |
 | Credential Manager | MicrosoftAccount SSO_POP_User: Oscar.Kiss@hotmail.com | cmdkey /list |
 | Credential Manager | SSO_POP_Device user: 02tpenhoakvugqlv | cmdkey /list |
