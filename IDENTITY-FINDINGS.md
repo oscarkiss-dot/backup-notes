@@ -113,13 +113,13 @@ Only one member exists on this org - **confirms Osie Black is solely owned/contr
 | Azure subscription 1 | `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` | `c8553249-...` (domain 201) |
 | Azure subscription 1 | `57c25f8f-b37a-4455-bae8-6991b87c7213` | `c194dd61-...` (domain 465) |
 
-**Important cross-link:** this confirms both previously-separate Entra tenants (`c8553249-...` and `c194dd61-...`) are linked to the *same* App Center organization ("Osie Black"), both under the user's own control. Azure AD is not yet "Connected" for this org (button available but unused).
+**Important cross-link:** this confirms both previously-separate Entra tenants (`c8553249-...` and `c194dd61-...`) are linked to the *same* App Center organization ("Osie Black"), both under the user's own control. App Center shows its Azure Active Directory integration as not connected; the existing subscription links remain visible independently.
 
 ### FINAL RESOLUTION - Osie Black is a self-created test artifact (user-confirmed)
 
 User confirmed directly: "Osie Black" is an org **they created themselves** while experimenting with App Center, and the linked email (`Oscar.Kiss@hotmail.com`) is their own personal email - not a third party, breach, or unknown actor. User intends to delete the apps ("Mac", "TextPlus") and the org itself as cleanup.
 
-**Security assessment: no third-party activity found.** The user later reported losing the sign-in route they used to reach this org, so access recovery remains an active follow-up. Do not delete the org or its apps until the user has confirmed that a working App Center sign-in route is restored and any needed data is exported.
+**Security assessment: no third-party activity found.** The user later reported losing the sign-in route they used to reach this org. Screenshots dated 2026-09-22 subsequently confirmed the session can again open the organization settings and Azure-link pages, so **App Center access is currently restored**. Do not delete the org or its apps until any needed data is exported.
 
 ### Current App Center Access-Recovery Anchor (2026-09-22)
 
@@ -135,7 +135,31 @@ The strongest supported recovery route is the Microsoft consumer account `Oscar.
 
 **Important distinction:** the `#EXT#` address is not a separate mailbox or a different person. It is the Entra guest/external representation of the personal Hotmail account. Recent Azure CLI attempts to obtain Microsoft Graph/ARM tokens returned `AADSTS50020`; this indicates that the consumer account is not eligible for that tenant's direct directory token flow. It does **not** show that the Hotmail account, subscription, or App Center org was deleted.
 
-**Recovery order:** sign into `https://appcenter.ms` using `Oscar.Kiss@hotmail.com` first; if it does not show Osie Black, use the Microsoft-account recovery/sign-in-preferences flow for that exact consumer account, then provide Microsoft Support the table above and request restoration of the App Center entitlement/organization membership. Do not create a replacement App Center organization while this recovery is in progress.
+**Recovery status:** the account/session can currently browse `https://appcenter.ms/orgs/Osie-Black/manage/settings` and `/manage/azure`, including the organization settings and linked subscription list. Preserve this working session and export any needed app data before cleanup. Do not create a replacement App Center organization.
+
+### App-Level Access Discovery (2026-09-22)
+
+The **Mac** app's Collaborators page shows:
+
+| Collaborator | Type | Role |
+|---|---|---|
+| Osie Black Admins | App Center group | Manager |
+
+The people picker contained `pianist_oscer@icloud.com`, but the screenshot does not establish that this address was added or invited. Do not send a new invitation merely to test access; first inspect the **Osie Black Admins** group and its membership from the App Center UI.
+
+### Additional Entra Tenant Observed (2026-09-22)
+
+A separate Default Directory was visible in the Entra/Billing screenshots:
+
+| Field | Value |
+|---|---|
+| Tenant ID | `23ed74b0-4708-4f7b-814d-89aa25583f9` |
+| Initial domain | `OscarKisshotmail482.onmicrosoft.com` |
+| User shown | `Oscar.Kiss_hotmail.com#EXT#@OscarKisshotmail482.onmicrosoft.com` |
+| User type | Member |
+| Billing/subscriptions shown | No subscriptions in that directory |
+
+This is distinct from the domain-201 and domain-465 tenants. It does not establish a new App Center link. The Entra **Invite external user** page and Azure **elevated access/MFA** page are not recovery steps for Osie Black; do not send an invitation, grant elevated access, or change MFA settings solely for this investigation.
 
 ### Admin Activity Trace (Azure Activity Log + Entra Audit Log, tenant `c8553249-...`)
 
@@ -193,7 +217,8 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 - Identify LAN device at `192.168.137.10`
 - Cross-reference Edge encrypted keys with Credential Manager entries
 - Identify the separate lowercase `osie black` entity in the App Center sidebar (distinct icon from "Osie Black" org) - not yet clicked into
-- Restore or confirm the App Center sign-in route for `Oscar.Kiss@hotmail.com` before any Osie Black cleanup; do not delete the org/apps while access/data recovery is unresolved
+- Export any required Osie Black app data now that current App Center access is confirmed, then decide whether cleanup is still wanted
+- Inspect the existing **Osie Black Admins** App Center group and document its membership before changing invitations or roles
 
 ## Investigation Scope & Standing Directive (2026-09-18)
 
