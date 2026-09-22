@@ -2,7 +2,7 @@
 
 Consolidated, read-only scan results from local PC filesystem, registry, and Windows Credential Manager. No passwords or secret values were extracted — only account identifiers, server endpoints, and artifact locations.
 
-_Last updated: 2026-09-19_
+_Last updated: 2026-09-22_
 
 ## Confirmed Email Identities
 - `Oscar.Kiss@hotmail.com` (primary)
@@ -133,6 +133,68 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 | Entra Directory Audit Log | All recent actions (MFA policy updates, company info changes, app/service principal updates, app consents) initiated exclusively by `Oscar.Kiss@hotmail.com` / `live.com#Oscar.Kiss@hotmail.com` - **no third-party or unknown initiators found** |
 
 **Conclusion:** all admin activity in this tenant traces back solely to the user. The one actionable item is that App Center still retains broad **Contributor** access to the subscription from an old "Connect to Azure AD" action - recommend revoking this role assignment when the org/apps are deleted.
+
+## Osie Black Ownership Trace + Access Recovery (2026-09-22)
+
+### Current lockout symptom
+- Interactive sign-in is failing with `AADSTS16000` against app `74658136-14ec-4630-ad9b-26e160ff0fc6` (`ADIbizaUX`) in tenant **"Microsoft Services"**
+- The rejected identity is the user's personal Microsoft account from `live.com`
+- This indicates an **account/tenant mismatch**, not loss of ownership of the underlying Osie Black App Center org
+
+### Consolidated identifiers
+| Category | Identifier | Status / meaning |
+|---|---|---|
+| Primary owner email | `Oscar.Kiss@hotmail.com` | Confirmed personal owner identity for Osie Black |
+| App Center org | `Osie Black` | Confirmed org name |
+| App Center org URL | `https://appcenter.ms/orgs/Osie-Black` | Confirmed |
+| App Center sidebar entity | `osie black` | Separate lowercase entity, still unresolved |
+| App Center service principal object ID | `faf4a9e5-1e7f-44c4-85b8-e0ebb46313dd` | Exact match to original App Center trace |
+| Root tenant for App Center trace | `c8553249-62c8-409b-9e73-b496ed042686` | Confirmed tenant tied to Osie Black org |
+| Root tenant domain | `OscarKisshotmail201.onmicrosoft.com` | Confirmed |
+| Linked tenant 2 | `c194dd61-7e9f-432c-b107-a45c8f0a7af0` | Also linked to same App Center org |
+| Linked tenant 2 domain | `OscarKisshotmail465.onmicrosoft.com` | Inferred from confirmed workplace admin identity `Admin@OscarKisshotmail465.onmicrosoft.com` |
+| Subscription 1 | `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` | Linked from App Center org |
+| Subscription 2 | `57c25f8f-b37a-4455-bae8-6991b87c7213` | Linked from App Center org |
+| Current failing admin app | `74658136-14ec-4630-ad9b-26e160ff0fc6` | Azure/Entra admin UX app receiving the rejected sign-in |
+| Current failing tenant label | `Microsoft Services` | Tenant named in current error, does not contain selected user |
+
+### Trace matrix: where Osie Black exists
+| Surface | Finding | Current state |
+|---|---|---|
+| App Center account / user profile | `Oscar.Kiss@hotmail.com` is the only confirmed admin/collaborator | Owned by user |
+| App Center organization | `Osie Black` org exists and contains `Mac` and `TextPlus` apps | Confirmed |
+| Azure / Entra tenant membership | Personal account drives activity in tenant `c8553249-...`; current sign-in failure shows it is not present in tenant `Microsoft Services` | Mixed / tenant-specific |
+| Custom domain / onmicrosoft domain | `OscarKisshotmail201.onmicrosoft.com` confirmed for root tenant; `Admin@OscarKisshotmail465.onmicrosoft.com` confirmed for linked workplace tenant | Confirmed |
+| Azure subscriptions | Two linked subscriptions visible from App Center | Confirmed |
+| Microsoft 365 / billing | Not yet separately enumerated in this repo; needs portal-side confirmation if billing access is required | Open |
+| GitHub / other linked sign-in providers | GitHub user `oscarkiss-dot` confirmed locally; no evidence yet that GitHub is the source of the current Azure tenant rejection | No blocking issue found |
+
+### Working conclusion
+- **Osie Black remains user-owned**
+- The present blocker is that the **personal owner identity is not a member/guest of the tenant currently being targeted by the admin sign-in flow**
+- The fastest safe recovery path is to **restore tenant visibility for the personal owner account** or switch the workflow back to the **tenant-native work/admin identity**
+
+### Recovery order
+1. **App Center**
+   - Sign in with `Oscar.Kiss@hotmail.com`
+   - Reconfirm orgs, apps, collaborators, API tokens, and Azure links under `Osie Black`
+2. **Entra / Azure tenant search**
+   - From the second admin account, search Users, Guest users, Enterprise applications, App registrations, Subscriptions, and Custom domain names for:
+     - `Oscar.Kiss@hotmail.com`
+     - `Osie Black`
+     - `osie black`
+     - `faf4a9e5-1e7f-44c4-85b8-e0ebb46313dd`
+3. **Tenant access repair**
+   - If the personal owner account is absent from the required tenant, invite it as a **guest user**
+   - Reassign only the minimum roles needed for the affected app/resource
+4. **Re-test sign-in**
+   - Use an incognito/private browser session
+   - Sign in with the intended account only
+   - Confirm whether the app still redirects into `Microsoft Services` or returns to the expected tenant
+5. **Stabilize ownership**
+   - If access is restored, migrate critical ownership from a personal-only identity to a safer shared/work admin identity where appropriate
+   - Remove stale App Center-to-Azure Contributor assignments during cleanup if the org/apps are retired
+
 ## Findings by Category
 
 | Category | Detail | Source |
