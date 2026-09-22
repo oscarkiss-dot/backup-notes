@@ -119,7 +119,23 @@ Only one member exists on this org - **confirms Osie Black is solely owned/contr
 
 User confirmed directly: "Osie Black" is an org **they created themselves** while experimenting with App Center, and the linked email (`Oscar.Kiss@hotmail.com`) is their own personal email - not a third party, breach, or unknown actor. User intends to delete the apps ("Mac", "TextPlus") and the org itself as cleanup.
 
-**Status: RESOLVED / NOT A SECURITY CONCERN.** No further investigation needed on this org unless new evidence emerges. Cleanup steps (for user reference): delete each app under Settings > Delete app, then Manage > Settings > Delete organization.
+**Security assessment: no third-party activity found.** The user later reported losing the sign-in route they used to reach this org, so access recovery remains an active follow-up. Do not delete the org or its apps until the user has confirmed that a working App Center sign-in route is restored and any needed data is exported.
+
+### Current App Center Access-Recovery Anchor (2026-09-22)
+
+The strongest supported recovery route is the Microsoft consumer account `Oscar.Kiss@hotmail.com`:
+
+| Evidence | What it establishes |
+|---|---|
+| App Center People page | `Oscar.Kiss@hotmail.com` is the only displayed collaborator and has the **Admin** role on Osie Black. |
+| Azure CLI account context | The same address remains authenticated for subscription `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` in tenant `c8553249-62c8-409b-9e73-b496ed042686`. |
+| Azure Portal settings cache | The tenant remains the default directory: `OscarKisshotmail201.onmicrosoft.com`. |
+| Microsoft profile export and Edge profile metadata | The account is a Microsoft consumer account (MSA), is locally cached in Edge Profile 1, and has a profile record dating to 2021-10-06. |
+| Microsoft Support case `2608290040000285` | Support confirmed the subscription owner is the tenant's external representation of this same address: `Oscar.Kiss_hotmail.com#EXT#@OscarKisshotmail201.onmicrosoft.com`. |
+
+**Important distinction:** the `#EXT#` address is not a separate mailbox or a different person. It is the Entra guest/external representation of the personal Hotmail account. Recent Azure CLI attempts to obtain Microsoft Graph/ARM tokens returned `AADSTS50020`; this indicates that the consumer account is not eligible for that tenant's direct directory token flow. It does **not** show that the Hotmail account, subscription, or App Center org was deleted.
+
+**Recovery order:** sign into `https://appcenter.ms` using `Oscar.Kiss@hotmail.com` first; if it does not show Osie Black, use the Microsoft-account recovery/sign-in-preferences flow for that exact consumer account, then provide Microsoft Support the table above and request restoration of the App Center entitlement/organization membership. Do not create a replacement App Center organization while this recovery is in progress.
 
 ### Admin Activity Trace (Azure Activity Log + Entra Audit Log, tenant `c8553249-...`)
 
@@ -132,7 +148,7 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 | Cognitive Services Resource | `oscarkiss-2382-resource` (AI Services / Azure OpenAI-type, SKU S0, `westus3`) in `rg-oscar.kiss-2088`, created 2026-08-17 by `Oscar.Kiss@hotmail.com`; key-retrieval actions logged 2026-09-14 |
 | Entra Directory Audit Log | All recent actions (MFA policy updates, company info changes, app/service principal updates, app consents) initiated exclusively by `Oscar.Kiss@hotmail.com` / `live.com#Oscar.Kiss@hotmail.com` - **no third-party or unknown initiators found** |
 
-**Conclusion:** all admin activity in this tenant traces back solely to the user. The one actionable item is that App Center still retains broad **Contributor** access to the subscription from an old "Connect to Azure AD" action - recommend revoking this role assignment when the org/apps are deleted.
+**Conclusion:** the reviewed activity sample traces to the user's known Microsoft identity; no unknown initiator was found in that sample. The one actionable item is that App Center retains broad **Contributor** access to the subscription from an old integration action. Revoke it only after confirming that the App Center access-recovery/export work is complete.
 ## Findings by Category
 
 | Category | Detail | Source |
@@ -177,7 +193,7 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 - Identify LAN device at `192.168.137.10`
 - Cross-reference Edge encrypted keys with Credential Manager entries
 - Identify the separate lowercase `osie black` entity in the App Center sidebar (distinct icon from "Osie Black" org) - not yet clicked into
-- ~~Resolve "Osie Black" App Center org and "TextPlus" app~~ **RESOLVED**: user-confirmed self-created test org/app, scheduled for deletion, not a security concern
+- Restore or confirm the App Center sign-in route for `Oscar.Kiss@hotmail.com` before any Osie Black cleanup; do not delete the org/apps while access/data recovery is unresolved
 
 ## Investigation Scope & Standing Directive (2026-09-18)
 
