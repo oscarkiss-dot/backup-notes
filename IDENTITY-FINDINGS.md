@@ -208,6 +208,17 @@ The user's tracked "device issue" is: the **physical device previously used to c
 
 User asked whether to delete `Oscar.Kiss@hotmail.com` from App Center and replace it with a work account, to try to resolve the AAD-connect failure. **Advised against deleting first** — it is the only currently-confirmed-working Admin identity on Osie Black; removing it before a replacement is added and verified risks a full, unrecoverable lockout, mirroring the same failure pattern as the lost 2FA devices above. Correct sequence: add a native/work account as an additional Admin, confirm it can fully load and operate Osie Black, and only then evaluate removing the personal account. Note also that a generic work email alone will not fix the AAD-connect failure — it must specifically be a native member of tenant `c8553249` with adequate directory rights.
 
+### Subscription-to-Domain Trace (2026-09-22)
+
+The two Azure subscriptions linked under Osie Black's Manage > Azure page belong to **two different tenants**, not one:
+
+| Subscription ID | Tenant ID | Domain |
+|---|---|---|
+| `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` | `c8553249-62c8-409b-9e73-b496ed042686` | `OscarKisshotmail201.onmicrosoft.com` (primary/anchor — holds the App Center service principal, its Contributor role assignment, and the Foundry AI resource) |
+| `57c25f8f-b37a-4455-bae8-6991b87c7213` | `c194dd61-7e9f-432c-b107-a45c8f0a7af0` | `OscarKisshotmail465.onmicrosoft.com` |
+
+This dual-tenant split is precisely why "Connect to Azure AD" fails: App Center can only link to one tenant, and its connect dialog defaults to `c194dd61`/`...465` — which is not the tenant holding the primary App Center-linked Azure activity. **Any new account added to resolve this should be a native (non-guest) member specifically of tenant `c8553249` / `OscarKisshotmail201.onmicrosoft.com`** — an account native only to `...465` would not cover the primary subscription.
+
 ### Additional Entra Tenant Observed (2026-09-22)
 
 A separate Default Directory was visible in the Entra/Billing screenshots:
