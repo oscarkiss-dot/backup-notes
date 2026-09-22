@@ -196,6 +196,18 @@ So Azure DevOps **is** linked as an App Center service integration for the TextP
 
 The Data Export dialog (Settings > Export > New Export) was also inspected — its "Instrumentation key" / "Connection string" fields are both empty placeholders; no export pipeline has actually been configured. This is an unused feature, not evidence of an active data flow.
 
+### Device Issue — Clarified (2026-09-22)
+
+The user's tracked "device issue" is: the **physical device previously used to complete GitHub advanced/two-factor authentication has been lost**. That device/method had originally been set up specifically to recover a lockout on `pianist_oscer@hotmail.com` (GitHub's device-based recovery succeeded at the time). Without that device, GitHub 2FA/recovery can no longer be completed. Separately, an **Apple ID verification code was passed successfully**, but Apple's account flow still demands an additional trusted-device verification step that cannot be completed without the lost device.
+
+**Recommended recovery path (safe, no destructive actions taken):**
+- GitHub: use saved recovery codes if any exist ("Use a recovery code" at login); otherwise file GitHub's account-recovery request (requires identity/billing proof, may take several days). Once regained, immediately remove the lost device's 2FA registration and add a current device/authenticator.
+- Apple ID: use `appleid.apple.com` → "Forgot Apple ID or password?" → **Account Recovery**, which does not require the old device but involves a multi-day security-review hold.
+
+### Guidance: Do Not Delete Oscar.Kiss@hotmail.com from Osie Black
+
+User asked whether to delete `Oscar.Kiss@hotmail.com` from App Center and replace it with a work account, to try to resolve the AAD-connect failure. **Advised against deleting first** — it is the only currently-confirmed-working Admin identity on Osie Black; removing it before a replacement is added and verified risks a full, unrecoverable lockout, mirroring the same failure pattern as the lost 2FA devices above. Correct sequence: add a native/work account as an additional Admin, confirm it can fully load and operate Osie Black, and only then evaluate removing the personal account. Note also that a generic work email alone will not fix the AAD-connect failure — it must specifically be a native member of tenant `c8553249` with adequate directory rights.
+
 ### Additional Entra Tenant Observed (2026-09-22)
 
 A separate Default Directory was visible in the Entra/Billing screenshots:
