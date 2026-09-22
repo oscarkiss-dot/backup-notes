@@ -163,6 +163,16 @@ All four pending invitations are the user's own previously-identified aliases; n
 
 **Action needed to resolve "invites fail":** sign into each alias mailbox (andrea.lakatos@windowslive.com, oscar.kiss@icloud.com, Oszkar@OscarKisshotmail465.onmicrosoft.com, pianist_oscer@icloud.com) and look for/accept the App Center invitation email, or re-send from the Osie Black collaborator list if the original invite expired.
 
+## Prioritized Action Plan (2026-09-22)
+
+After extensive tracing, the Osie Black origin investigation is **closed** — it is fully explained as self-created and self-named by the user, with no external or malicious actor involved. Remaining open items were re-prioritized honestly by actual impact:
+
+1. **GitHub 2FA/account recovery** (highest priority, longest lead time) — start GitHub's account-recovery request now if no saved recovery codes exist; can take several days.
+2. **Apple ID device-verification recovery** (equal priority) — start Account Recovery at appleid.apple.com now; also a multi-day hold.
+3. **Add a second working Admin to Osie Black** — accept one of the already-pending self-owned App Center invites, as a redundancy safety net against single-point-of-failure lockout.
+4. **App Center "Connect to Azure AD" fix — deprioritized.** This only enables AAD-group-based permission management in App Center; it is not required for current full Admin access via Oscar.Kiss@hotmail.com. Not worth the effort/risk of provisioning a new native Global Admin user solely for this.
+5. **General caution going forward:** avoid clicking unfamiliar Azure Portal actions outside an explicitly agreed step list — the "Change directory" incident earlier was a near-miss that could have disrupted subscription 57c25f8f's RBAC.
+
 ### Why Osie Black Never Appears as an Azure "Resource" (2026-09-22)
 
 An App Center **organization** is not an Azure Resource Manager (ARM) object. It will never show up in `az resource list`, the Azure Portal's Resource Groups blade, or the "All resources" view, regardless of Admin role in App Center. The only Azure-side artifacts tied to Osie Black are the two **linked subscriptions** visible under App Center's Manage > Azure page (`f2aa2ed7-...` and `57c25f8f-...`). Being Admin on the App Center org does not, by itself, grant Azure RBAC roles on those subscriptions/resources — those are separate permission systems. This is most likely the source of the "I'm Admin but don't see it in my resources" contradiction, not a broken/lost account.
