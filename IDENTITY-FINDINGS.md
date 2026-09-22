@@ -147,6 +147,30 @@ The **Mac** app's Collaborators page shows:
 
 The people picker contained `pianist_oscer@icloud.com`, but the screenshot does not establish that this address was added or invited. Do not send a new invitation merely to test access; first inspect the **Osie Black Admins** group and its membership from the App Center UI.
 
+### Org-Level Collaborator List Confirmed (2026-09-22)
+
+`appcenter.ms/orgs/Osie-Black/people/collaborators` (org level, distinct from the Mac app's collaborator list) shows **5 Admins**:
+
+| Collaborator | Status |
+|---|---|
+| Oscar.Kiss@hotmail.com | Active (currently signed in) |
+| andrea.lakatos@windowslive.com | Invited (pending) |
+| oscar.kiss@icloud.com | Invited (pending) |
+| Oszkar@OscarKisshotmail465.onmicrosoft.com | Invited (pending) |
+| pianist_oscer@icloud.com | Invited (pending) |
+
+All four pending invitations are the user's own previously-identified aliases; no third-party address is present. This explains the "invites fail" symptom: the invitations were sent successfully (status = Invited) but were never accepted, most likely because the destination alias mailbox was never opened to accept them. A **Teams** sub-page also exists (`.../people/teams`) showing one team named "OS" with 1 member and 1 app, separate from the app-level "Osie Black Admins" group found earlier.
+
+**Action needed to resolve "invites fail":** sign into each alias mailbox (andrea.lakatos@windowslive.com, oscar.kiss@icloud.com, Oszkar@OscarKisshotmail465.onmicrosoft.com, pianist_oscer@icloud.com) and look for/accept the App Center invitation email, or re-send from the Osie Black collaborator list if the original invite expired.
+
+### Why Osie Black Never Appears as an Azure "Resource" (2026-09-22)
+
+An App Center **organization** is not an Azure Resource Manager (ARM) object. It will never show up in `az resource list`, the Azure Portal's Resource Groups blade, or the "All resources" view, regardless of Admin role in App Center. The only Azure-side artifacts tied to Osie Black are the two **linked subscriptions** visible under App Center's Manage > Azure page (`f2aa2ed7-...` and `57c25f8f-...`). Being Admin on the App Center org does not, by itself, grant Azure RBAC roles on those subscriptions/resources — those are separate permission systems. This is most likely the source of the "I'm Admin but don't see it in my resources" contradiction, not a broken/lost account.
+
+### "Connect to Azure AD" Failure (2026-09-22, unresolved)
+
+User confirms clicking this button in App Center's Manage > Azure Active Directory tab fails. A prior screenshot in this investigation showed a partially-cut-off red error reading approximately: *"Failed to link Org to an AAD tenant, you likely do not have access to the home tenant because you are logged in with a personal..."* This is consistent with the org needing to be linked by a **native/member** account of the target tenant (not a personal Microsoft/guest account) with sufficient Global Admin rights in that tenant's Entra ID. Needs the full, non-truncated error text to confirm the exact remediation.
+
 ### Additional Entra Tenant Observed (2026-09-22)
 
 A separate Default Directory was visible in the Entra/Billing screenshots:
