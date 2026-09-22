@@ -167,9 +167,34 @@ All four pending invitations are the user's own previously-identified aliases; n
 
 An App Center **organization** is not an Azure Resource Manager (ARM) object. It will never show up in `az resource list`, the Azure Portal's Resource Groups blade, or the "All resources" view, regardless of Admin role in App Center. The only Azure-side artifacts tied to Osie Black are the two **linked subscriptions** visible under App Center's Manage > Azure page (`f2aa2ed7-...` and `57c25f8f-...`). Being Admin on the App Center org does not, by itself, grant Azure RBAC roles on those subscriptions/resources — those are separate permission systems. This is most likely the source of the "I'm Admin but don't see it in my resources" contradiction, not a broken/lost account.
 
-### "Connect to Azure AD" Failure (2026-09-22, unresolved)
+### "Connect to Azure AD" Failure — ROOT CAUSE CONFIRMED (2026-09-22)
 
-User confirms clicking this button in App Center's Manage > Azure Active Directory tab fails. A prior screenshot in this investigation showed a partially-cut-off red error reading approximately: *"Failed to link Org to an AAD tenant, you likely do not have access to the home tenant because you are logged in with a personal..."* This is consistent with the org needing to be linked by a **native/member** account of the target tenant (not a personal Microsoft/guest account) with sufficient Global Admin rights in that tenant's Entra ID. Needs the full, non-truncated error text to confirm the exact remediation.
+Full error text captured from `appcenter.ms/orgs/Osie-Black/manage/azure/connect-tenant`:
+
+> "Oops. Something went wrong. Please try again."
+> "Failed to link Org to an AAD tenant, you likely do not have access to the home tenant because you are logged in with a personal account."
+
+Critically, the "Connect your tenant" picker offered **only one option**: `Default Directory` — tenant `c194dd61-7e9f-432c-b107-a45c8f0a7af0` (the `...465` tenant). It did **not** offer `c8553249` (the Osie Black anchor tenant that actually holds the two linked subscriptions `f2aa2ed7-...` and `57c25f8f-...`).
+
+**Confirmed root cause (two compounding issues):**
+1. The browser/account session's *default* tenant resolves to `c194dd61`, not `c8553249` — consistent with this PC's `dsregcmd` WorkplaceJoin also pointing at `c194dd61`. App Center is offering to link to the wrong tenant entirely.
+2. Even disregarding (1), `Oscar.Kiss@hotmail.com` is a **personal/consumer Microsoft Account (MSA)**, not a native work/school account, in that tenant's directory — and AAD-tenant linking requires a native member account with directory permissions, not an MSA/guest identity. This matches the exact wording of the error.
+
+**No further action recommended without care**: forcing a link to `c194dd61` would attach Osie Black to a tenant that does not hold its subscriptions. Resolving this properly would require either (a) creating/using a native work account inside tenant `c8553249` with sufficient rights, or (b) accepting that Osie Black may simply remain unlinked to any AAD tenant (App Center works fine without this optional feature — it only enables AAD-group-based access management, which is not required for basic org/app administration).
+
+### Correction: Azure DevOps IS Linked (service-level, not local machine)
+
+Earlier this session it was concluded "not connected to DevOps" based on local CLI/Credential Manager checks. New evidence narrows this: the **TextPlus app's Settings > Services** page (App Center service integrations, stored server-side — a different scope than the local-PC check) shows three linked accounts:
+
+| Service | Account |
+|---|---|
+| GitHub (Bug tracker) | pianist_oscer@hotmail.com |
+| Azure DevOps | Oscar.Kiss@hotmail.com |
+| GitHub | oscar.kiss@hotmail.com |
+
+So Azure DevOps **is** linked as an App Center service integration for the TextPlus app specifically. This does not contradict the earlier local-machine finding (no `dev.azure.com` entries in Credential Manager, no DevOps CLI extension) — those two facts describe different things: a server-side App Center integration vs. this PC's local credential cache. Also newly observed alias: `pianist_oscer@hotmail.com` (a third variant alongside the previously known `@icloud.com` and `@outlook.com` forms).
+
+The Data Export dialog (Settings > Export > New Export) was also inspected — its "Instrumentation key" / "Connection string" fields are both empty placeholders; no export pipeline has actually been configured. This is an unused feature, not evidence of an active data flow.
 
 ### Additional Entra Tenant Observed (2026-09-22)
 
