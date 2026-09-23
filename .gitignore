@@ -1,0 +1,45 @@
+# --- Private evidence, recovered mail, and exports (never commit real data) ---
+exports/
+export/
+recovered-mail/
+recovered-icloud-mail/
+*.eml
+*.pst
+*.ost
+*.mbox
+*.pcapng
+evidence/
+recovery-results/
+recovery-output/
+local-recovery-results/
+*-recovery-results/
+
+# --- Generated output of scripts/recover_mail.py ---
+messages.csv
+attachments.csv
+recovery.sqlite
+summary.json
+/output/
+/results/
+
+# --- Credentials and local configuration ---
+*.pem
+*.key
+*.pfx
+*.p12
+.env
+.env.*
+secrets.json
+credentials.json
+*.credentials
+config.local.json
+.local-config/
+
+# --- Common OS / editor / Python noise ---
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
