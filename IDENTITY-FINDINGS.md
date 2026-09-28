@@ -294,6 +294,20 @@ Traced via `az monitor activity-log list` and Microsoft Graph `auditLogs/directo
 - `ArtworkDB` — oldest dated artifact (2020-11-25), Public Suffix List domain rules
 - Edge `Local State` — encrypted profile/sync/auth keys, multiple browser profiles
 
+## Windows Credential Manager / Device Certificate Decode (2026-09-28)
+
+The selected certificate in the Windows **Add a Certificate-Based Credential** form is:
+
+| Field | Value |
+|---|---|
+| Issued to / device ID | `bc56ad1d-742c-46ab-bf65-b9a989a8eb7d` |
+| Issued by | `MS-Organization-Access` |
+| Validity | 2026-09-18 through 2036-09-18 |
+
+Read-only local checks confirm `dsregcmd /status` reports `WorkplaceJoined: YES`, `WorkplaceDeviceId: bc56ad1d-742c-46ab-bf65-b9a989a8eb7d`, and `WorkplaceTenantId: c194dd61-7e9f-432c-b107-a45c8f0a7af0` (`...465` tenant); `AzureAdJoined: NO`. The certificate's subject matches this PC's workplace device ID, so this is the **current PC's Entra workplace-registration/device-auth certificate**, not the lost GitHub 2FA device or a GitHub credential. The certificate-credential form has a blank network address and was not submitted; do not use it to create a GitHub credential. Do not delete or export the certificate/private key.
+
+The Credential Manager screenshot also shows cached account/app entries, including a generic target beginning `92531aa2-...github-cop...`. The name is consistent with a GitHub Copilot app credential, but the target label alone does not establish which GitHub account it authenticates or whether it can recover access to `pianist_oscer@hotmail.com`. Password/token contents were not read or exposed; do not copy, export, or share them. The visible Microsoft-account and `virtualapp/didlogical` entries are local cached credentials, not proof of current tenant permissions or GitHub 2FA recovery.
+
 ## Open Follow-ups
 - Decode 6 MAPI GUIDs in Outlook profile via MFCMAPI to reveal linked accounts
 - Identify LAN device at `192.168.137.10`
