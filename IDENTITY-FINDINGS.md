@@ -342,3 +342,22 @@ No active SMB mapping or connection was returned for `OZ` during the read-only c
 | AWS | Planned | Check for IAM users/accounts tied to same email aliases or Osie Black identity |
 | Oracle Cloud | Planned | Check for OCI accounts tied to same identity |
 | Other (GitHub orgs, Apple/iCloud, etc.) | Reserved | Add as they come up; cross-reference against the same alias cluster |
+
+## GoDaddy / Domain Registrar Search — No Evidence Found (2026-09-28)
+Searched DNS logs (`dns log.csv`, 7.4MB capture), domain category rollups (`category-domains-4.csv`), mailbox rule exports, and contact lists for GoDaddy or any other registrar (Namecheap, IONOS/1&1, Network Solutions, Bluehost, HostGator). **Zero matches anywhere.** `category-domains-4.csv` shows only consumer categories (Microsoft, Apple, telemetry, general web) — no registrar/hosting traffic ever recorded. Bulk tenant lookup (`tenantidlookup_bulk_2026-07-08...csv`) confirms `osieblack` returns "Invalid tenant ID or domain" — it was never a real registered domain, consistent with the earlier closed finding that it is a self-created nickname/saved-filter name only.
+
+## Mailbox Forwarding Rule — Benign Self-Forward
+Found `InboxRules.txt` (Exchange mailbox rule export). One `OP_FORWARD` rule exists, decoded from binary: forwards `oscar.kiss@hotmail.com` → `oscar.kiss@hotmail.com` (itself). This is a standard loop-prevention/self rule, **not** external exfiltration. No third-party forwarding address found in any mailbox export.
+
+## "OZ" Credential Resolved — Old Acer Desktop
+`DeviceHash_OZ.csv` (Windows Autopilot hardware-hash export) identifies the actual hardware behind the `OZ` Credential Manager entry:
+- Serial: `PTSCM0200194900C933000`
+- System: **Acer Aspire X1301** desktop (Phoenix BIOS, Acer WMCP78M motherboard, NVIDIA GeForce 9200 GPU — circa 2008–2010 hardware)
+
+This is a genuinely old physical PC registered for device enrollment. Its exact relationship to the host reachable at `192.168.137.10` via Mobile Hotspot is not yet confirmed — could be the same box or a separate old device.
+
+## Google Workspace Migration Attempt Found
+Installed software "Google Workspace Migration for Microsoft Exchange 5.2.42.0" (installed 2026-07-06) plus `GoogleIDPMetadata.xml` (Google SAML IdP metadata, valid until 2031-07-05) found in `C:\Users\oscar\Downloads`. Concrete evidence of an attempt to migrate mail from Microsoft 365/Exchange to Google Workspace and/or set up Google as a SAML SSO provider — intent/outcome not yet confirmed with user.
+
+## Microsoft Support Case #2608290040000285 — Effectively Answered
+Found the full email thread saved as `.eml` in OneDrive Documents. Support (Tobi Adesoye / Samuel Odunlade, Azure Subscription Management Support) confirmed: subscription `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` owner is `Oscar.Kiss_hotmail.com#EXT#@OscarKisshotmail201.onmicrosoft.com` (guest), Tenant ID `c8553249-62c8-409b-9e73-b496ed042686`. Microsoft Support **cannot** retrieve further historical tenant/mailbox/billing details beyond what the tenant's own Global Admin (the user) can already see. Case may auto-close due to inactivity — effectively resolved, no further action needed unless user wants to formally reply/close it.
