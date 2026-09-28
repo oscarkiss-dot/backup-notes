@@ -349,12 +349,12 @@ Searched DNS logs (`dns log.csv`, 7.4MB capture), domain category rollups (`cate
 ## Mailbox Forwarding Rule — Benign Self-Forward
 Found `InboxRules.txt` (Exchange mailbox rule export). One `OP_FORWARD` rule exists, decoded from binary: forwards `oscar.kiss@hotmail.com` → `oscar.kiss@hotmail.com` (itself). This is a standard loop-prevention/self rule, **not** external exfiltration. No third-party forwarding address found in any mailbox export.
 
-## "OZ" Credential Resolved — Old Acer Desktop
+## "OZ" Credential — FULLY RESOLVED (Own Old Acer Desktop)
 `DeviceHash_OZ.csv` (Windows Autopilot hardware-hash export) identifies the actual hardware behind the `OZ` Credential Manager entry:
 - Serial: `PTSCM0200194900C933000`
-- System: **Acer Aspire X1301** desktop (Phoenix BIOS, Acer WMCP78M motherboard, NVIDIA GeForce 9200 GPU — circa 2008–2010 hardware)
+- System: **Acer Aspire X1301** desktop (Phoenix BIOS, Acer WMCP78M motherboard, AMD Athlon II X2 240 CPU, NVIDIA GeForce 9200 GPU — circa 2009–2011 hardware)
 
-This is a genuinely old physical PC registered for device enrollment. Its exact relationship to the host reachable at `192.168.137.10` via Mobile Hotspot is not yet confirmed — could be the same box or a separate old device.
+**`OZ` = short for "Oszkar"** (`oszkar.kiss@hotmail.com` alias). Corroborated by a prior self-inspection AI session log (`copilot-activity-history.csv`) that independently reconstructed this same device as the user's early Canada-period computer (post-UK, pre-Apple-ecosystem), registered under `oszkar.kiss@hotmail.com`. Both Credential Manager entries — `Domain:target=OZ` and `Domain:target=192.168.137.10` (username `oz`) — point to this same physical device. **Confirmed self-owned, not foreign/third-party.** (That same log also references a `rosie.black@live.ca` alias tied to Xbox/App Center metadata — separate from the already-closed Osie Black investigation, noted for awareness only.)
 
 ## Google Workspace Migration Attempt Found
 Installed software "Google Workspace Migration for Microsoft Exchange 5.2.42.0" (installed 2026-07-06) plus `GoogleIDPMetadata.xml` (Google SAML IdP metadata, valid until 2031-07-05) found in `C:\Users\oscar\Downloads`. Concrete evidence of an attempt to migrate mail from Microsoft 365/Exchange to Google Workspace and/or set up Google as a SAML SSO provider — intent/outcome not yet confirmed with user.
