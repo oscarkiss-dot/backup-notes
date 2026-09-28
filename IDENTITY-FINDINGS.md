@@ -308,6 +308,18 @@ Read-only local checks confirm `dsregcmd /status` reports `WorkplaceJoined: YES`
 
 The Credential Manager screenshot also shows cached account/app entries, including a generic target beginning `92531aa2-...github-cop...`. The name is consistent with a GitHub Copilot app credential, but the target label alone does not establish which GitHub account it authenticates or whether it can recover access to `pianist_oscer@hotmail.com`. Password/token contents were not read or exposed; do not copy, export, or share them. The visible Microsoft-account and `virtualapp/didlogical` entries are local cached credentials, not proof of current tenant permissions or GitHub 2FA recovery.
 
+### `OZ` and `virtualapp/didlogical` Credential Identification
+
+Read-only `cmdkey /list` inspection confirms:
+
+| Credential target | Type | Username | What can be established |
+|---|---|---|---|
+| `Domain:target=OZ` | Domain Password | `OZ` | A saved Windows network/domain credential whose target and username are both `OZ`. The current PC hostname is `DESKTOP-V1BDUNP`, so `OZ` is not this PC's current hostname. The target alone does not identify the remote host, person, or account service. |
+| `Domain:target=192.168.137.10` | Domain Password | `oz` | A separate saved network credential for that IP, also using username `oz`. It could be related to the `OZ` entry, but that cannot be established from Credential Manager alone. |
+| `WindowsLive:target=virtualapp/didlogical` | Generic | `02tpenhoakvugqlv` | A legacy Windows Live/Microsoft-services credential target used for saved sign-in/SSO. The username is an opaque identifier, not an email address or an identified human account. The same username appears under `SSO_POP_Device`, which suggests a device/SSO-related cached identity but does not identify the Microsoft account behind it. |
+
+No active SMB mapping or connection was returned for `OZ` during the read-only check. These entries do not identify a particular Microsoft account, GitHub identity, or lost physical device. To identify `OZ` further, compare the target with historical router/DHCP device names, NAS/printer/network-share configuration, or the device that was previously accessed using username `oz`. Do not delete the entries or reveal/export their secret values while tracing them.
+
 ## Open Follow-ups
 - Decode 6 MAPI GUIDs in Outlook profile via MFCMAPI to reveal linked accounts
 - Identify LAN device at `192.168.137.10`
