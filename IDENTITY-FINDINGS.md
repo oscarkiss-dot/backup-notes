@@ -361,3 +361,16 @@ Installed software "Google Workspace Migration for Microsoft Exchange 5.2.42.0" 
 
 ## Microsoft Support Case #2608290040000285 — Effectively Answered
 Found the full email thread saved as `.eml` in OneDrive Documents. Support (Tobi Adesoye / Samuel Odunlade, Azure Subscription Management Support) confirmed: subscription `f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb` owner is `Oscar.Kiss_hotmail.com#EXT#@OscarKisshotmail201.onmicrosoft.com` (guest), Tenant ID `c8553249-62c8-409b-9e73-b496ed042686`. Microsoft Support **cannot** retrieve further historical tenant/mailbox/billing details beyond what the tenant's own Global Admin (the user) can already see. Case may auto-close due to inactivity — effectively resolved, no further action needed unless user wants to formally reply/close it.
+
+## oscar.kiss@hotmail.com — Full Mail/Exchange Evidence Scan (2026-09-28)
+Read-only, metadata-only scan of all mail-related files (.pst/.ost/.eml/.msg) across the entire C: drive.
+
+**PST files (4 found)**: All exactly ~271KB — this is the standard size of an **empty** Outlook data file with zero stored messages, not real historical archives. No bulk mail content exists in any of them.
+
+**Genuine Microsoft Entra security alert found**: "Microsoft Entra ID Protection Weekly Digest" (dated 2026-07-07, from `MSSecurity-noreply@microsoft.com`, verified legitimate via SPF pass + correct cross-tenant headers) reported **"New risky users detected"** and **"New risky sign-ins detected"** for tenant `MyWorkSpace67.onmicrosoft.com`. This is a real, actionable alert — recommend logging into entra.microsoft.com for that tenant and reviewing Identity Protection > Risky sign-ins / Risky users, since specifics aren't visible in the static digest email itself.
+
+**Historical display name confirmed**: A 2021-06-11 bounce email shows display name "Oszkar Kiss" `<Oscar.Kiss@hotmail.com>` used with Adecco (staffing agency) — confirms "Oszkar" as a genuine historical display-name variant on this mailbox, consistent with the earlier OZ/Oszkar credential finding. Also found account-existence proof back to 2014 (an "Automatically update your contacts" Outlook onboarding email).
+
+**Phishing email flagged (no action beyond awareness)**: A 2024-02-02 email spoofing "Government Gateway" (vehicle tax scam) using Unicode lookalike characters, sent from a compromised/unrelated third-party tenant (`snohomishcountyweddings.onmicrosoft.com`). This is spam received by the user, not evidence of the user's own account being compromised.
+
+**Unrelated personal correspondence**: 2021 Adecco job-assessment onboarding emails — not identity-security relevant.
