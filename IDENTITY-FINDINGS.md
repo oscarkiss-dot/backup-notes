@@ -374,3 +374,131 @@ Read-only, metadata-only scan of all mail-related files (.pst/.ost/.eml/.msg) ac
 **Phishing email flagged (no action beyond awareness)**: A 2024-02-02 email spoofing "Government Gateway" (vehicle tax scam) using Unicode lookalike characters, sent from a compromised/unrelated third-party tenant (`snohomishcountyweddings.onmicrosoft.com`). This is spam received by the user, not evidence of the user's own account being compromised.
 
 **Unrelated personal correspondence**: 2021 Adecco job-assessment onboarding emails — not identity-security relevant.
+
+---
+
+# DEEP FORENSIC IDENTITY RECONSTRUCTION (2026-09-29)
+
+_Investigation scope: authorized self-audit of this PC's own Microsoft/Windows identity history. Read-only. No secrets extracted. Evidence confidence levels used throughout: VERIFIED / CORROBORATED / INFERRED / UNRESOLVED / DISPROVEN._
+
+## Executive Finding
+This machine's OneAuth/identity caches, Exchange mailbox rule export, and a prior Microsoft Support case thread together establish **at least two genuinely distinct Microsoft identities** used by the same person: the personal MSA `Oscar.Kiss@hotmail.com`, and a separate native Entra member account `Oszkar@OscarKisshotmail465.onmicrosoft.com`. A third apparent "tenant" found in the cache (`f8cdef31-a31e-4b4a-93e4-5f571e91255a`) was investigated and is **not** a user tenant — it is Microsoft's own internal multi-tenant app-owner organization, already documented in this repo's history. The OS itself was freshly imaged on **2026-08-27**, meaning no `Windows.old` or pre-imaging artifacts survive locally; all older timestamps come from synced/imported files, not organic local account history.
+
+## Confirmed Microsoft Identities
+| Identity (Object ID / login) | UPN | Type | Tenant | Evidence |
+|---|---|---|---|---|
+| `b7c7f198a4ce6340` | `Oscar.Kiss@hotmail.com` | MSA (personal) | `9188040d-...` (consumer realm) | VERIFIED — OneAuth account cache |
+| `ef8c8bef-7f4f-4e3b-ad91-2ba9948d1bc3` | `Oszkar@OscarKisshotmail465.onmicrosoft.com` | AAD native member (`idtyp=user`) | `c194dd61-...` "Default Directory" | VERIFIED — OneAuth account cache, distinct object ID |
+| `2a8e7ac3-7187-407f-95d4-7d15ad87c1a1` | `Oscar.Kiss@hotmail.com` (guest rep.) | AAD guest | `c8553249-...` (Osie Black anchor) | CORROBORATED — `home_account_id` ties back to the MSA identity |
+| `dc95a94aad6842c9` | `michellekiss2026@outlook.com` | MSA (personal) | `9188040d-...` | VERIFIED — separate family member account, unrelated to Osie Black |
+
+## Confirmed Historical Names
+- **"Oscar Kiss"** — primary display name across MSA and Exchange mailbox artifacts (VERIFIED)
+- **"Oszkar Kiss" / "Oszkar"** — historical display-name variant, used at least since 2021 (Adecco correspondence bounce) and matches a distinct native Entra account UPN (`Oszkar@OscarKisshotmail465...`) (CORROBORATED)
+- **"Michelle kiss"** — separate family-member MSA, not the same person (VERIFIED)
+
+## Confirmed Email Addresses / Aliases
+See existing "Confirmed Email Identities" section above (carried forward, not contradicted by this pass): `Oscar.Kiss@hotmail.com`, `oscar.kiss@outlook.com`, `pianist_oscer@outlook.com`, `michellekiss2026@outlook.com`, `Oszkar@OscarKisshotmail465.onmicrosoft.com`.
+
+## Possible Aliases
+- `andrea.lakatos@windowslive.com` — appears only in IdentityCRL registry; relationship to primary identity NOT re-verified this pass (INFERRED, carried from prior finding)
+- `private-love@private-love.com` — same status (INFERRED, carried from prior finding)
+
+## Windows Profiles and SIDs
+| SID (suffix) | Account | Enabled | Created | Notes |
+|---|---|---|---|---|
+| ...1001 | LENOVO | Yes | 2026-08-27 | Primary profile this session |
+| ...1002 | oscar | Yes | 2026-08-27 | Secondary self-inspection profile |
+| ...1003 | WsiAccount | No | 2026-08-27 | PasswordLastSet (2026-07-07) predates profile folder creation — timestamp inconsistency, unexplained (UNRESOLVED) |
+| ...1008/1009 | CodexSandboxOffline/Online | Yes | 2026-08-10/13 | Copilot CLI sandbox accounts — **not part of the user's identity**, confirmed by naming/purpose |
+
+**Critical caveat (VERIFIED)**: OS install date is 2026-08-27. No `Windows.old` exists. This is a freshly imaged system — any file/timestamp predating this date arrived via OneDrive sync, manual import, or attachment, not organic local history on this specific install.
+
+## Outlook Profiles
+Classic Outlook MAPI profile registry (`HKCU:\Software\Microsoft\Office\Outlook\Profiles`) is **empty** under the LENOVO hive (VERIFIED negative result — consistent with using New Outlook / no legacy profile configured). The `oscar` profile's registry hive is not currently mounted/loaded and was not inspected this pass (SEARCH LIMITATION — would require `reg load`, a higher-risk read action not performed without separate authorization).
+
+## Exchange Mailboxes
+One real Exchange Online mailbox identified for display name "Oscar Kiss" via `InboxRules.txt`:
+- **LegacyExchangeDN**: `/o=First Organization/ou=Exchange Administrative Group(FYDIBOHF23SPDLT)/cn=Recipients/cn=00064000E2621A80`
+- **Mailbox GUID**: `00064000-e262-1a80-0000-000000000000`
+- **Mailbox Database GUID**: `2f226473-60d9-4e8e-9448-587806558fcb`
+- **Server**: `DS4PR17MB7806.namprd17.prod.outlook.com` (real Exchange Online / outlook.com backend)
+- **Database**: `NAMPR17DG448-db183`
+
+All VERIFIED — directly present in the mailbox rule export XML, not inferred.
+
+## Exchange GUID / LegacyExchangeDN Evidence
+See table above. This is the strongest Exchange-specific artifact found this pass.
+
+## Microsoft 365 Relationships
+No M365/SharePoint/Teams organizational identifiers beyond what's already logged (App Center service principal, Foundry resource) were newly found this pass.
+
+## Confirmed Entra Tenants
+| Tenant ID | Domain | Relationship | Confidence |
+|---|---|---|---|
+| `c8553249-62c8-409b-9e73-b496ed042686` | `OscarKisshotmail201.onmicrosoft.com` | Owner (per MS Support case thread) | VERIFIED |
+| `c194dd61-7e9f-432c-b107-a45c8f0a7af0` | `OscarKisshotmail465.onmicrosoft.com` ("Default Directory") | Native member (`Oszkar@...`) | VERIFIED |
+| `14711b58-546b-466f-97d6-38528f6a109c` | `MyWorkSpace67.onmicrosoft.com` | Workplace-joined device; notification recipient (Entra digest) | CORROBORATED (membership level not independently re-verified) |
+
+## Possible Historical Tenants
+- `23ed74b0-4708-4f7b-814d-89aa25583f9` (`OscarKisshotmail482.onmicrosoft.com`) — logged in a prior session checkpoint showing `Oscar.Kiss` as **Member** (not guest/#EXT#) — **not re-verified this pass**. This is a genuinely different relationship pattern than the guest pattern seen elsewhere and is flagged as a high-value unresolved lead below.
+
+## MyWorkSpace67 Investigation
+Digest email confirms `oscar.kiss@hotmail.com` receives Microsoft Entra ID Protection admin notifications ("risky users"/"risky sign-ins detected") for `MyWorkSpace67.onmicrosoft.com`, tenant `14711b58-...`. This typically requires a security-related admin role, but the email artifact alone proves **notification receipt**, not conclusively **membership type** — classified CORROBORATED, not fully VERIFIED, pending a live portal check.
+
+## Authentication Evidence
+- Windows Device Registration/Admin log shows repeated Hello for Business provisioning skips (benign, expected — not Entra-joined on this device path)
+- One AADSTS50173 error found: "provided grant has expired... user might have changed or reset their password" — grant issued 2026-07-11, invalidated by a token-validity reset dated 2026-07-21. Consistent with a legitimate password change on that account around that time, not evidence of compromise.
+
+## Historical Timeline
+| Date | Event | Evidence Type |
+|---|---|---|
+| 2014-08-15 | "Automatically update your contacts" Outlook onboarding email — proves mailbox existed by this date | VERIFIED (message Date header — see caveat below) |
+| 2021-06-11 | "Oszkar Kiss" display name used in Adecco job-assessment correspondence | VERIFIED |
+| 2026-07-07 | Michelle kiss / michellekiss2026@outlook.com and Entra digest for MyWorkSpace67 both dated | VERIFIED |
+| 2026-08-27 | This Windows installation imaged (OS InstallDate) | VERIFIED |
+| 2026-09-28 | LENOVO local account password reset (this session) | VERIFIED |
+
+## Application Relationships
+No new application-account correlations found beyond what's previously logged (App Center, Azure DevOps link, GitHub Copilot credential entry).
+
+## Evidence Predating 2026
+- 2014-08-15 Outlook onboarding email (message timestamp)
+- 2021-06-11 Adecco correspondence ("Oszkar Kiss" display name)
+- ~2009–2011-era Acer desktop hardware (OZ device) — hardware manufacture date, not an account-creation date
+
+## Evidence Predating 2021
+- Only the 2014-08-15 Outlook onboarding email message timestamp, and the Acer hardware's manufacture era. No other pre-2021 evidence found this pass.
+
+## Earliest Verified Evidence
+**EARLIEST VERIFIED ACCOUNT-RELATED EVIDENCE**
+- **DATE**: 2014-08-15
+- **IDENTITY**: `Oscar.Kiss@hotmail.com`
+- **ARTIFACT**: "Automatically update your contacts" Outlook onboarding email (.msg)
+- **PATH**: `C:\Users\oscar\iCloudDrive\Downloads\Automatically update your contacts.msg`
+- **TYPE OF DATE**: Email `Date:` header (message-sent timestamp) — **NOT** an account-creation timestamp, and **NOT** a file-system timestamp
+- **WHY IT MATTERS**: Proves the mailbox was active and receiving Outlook.com onboarding mail by this date. It does **not** prove the account was *created* in 2014 — only that it existed and was already onboarded onto Outlook by then. The earlier "traced back to 2014" claim is hereby **downgraded from an implied creation-date claim to an INFERRED lower-bound of existence** — the true creation date remains unknown and could be earlier.
+
+## Contradictions
+1. **The 2014 claim** — previously stated loosely as "traced back to 2014." Corrected above: it is message-timestamp evidence of existence, not proof of account creation date. (RESOLVED — reclassified as INFERRED lower bound)
+2. **`f8cdef31-...` tenant** — initially looked like an unknown 4th tenant in this pass's fresh cache read. Resolved using this repository's OWN prior documented finding (session checkpoint + earlier IDENTITY-FINDINGS.md entry): it is Microsoft's internal app-owner org, not a user tenant. (RESOLVED — DISPROVEN as user-tenant hypothesis)
+3. **WsiAccount timestamp inconsistency** — PasswordLastSet (2026-07-07) predates its profile folder's CreationTime (2026-08-27). Not explained by current evidence. (UNRESOLVED)
+4. **Tenant `...482` Member-type relationship** — a prior session checkpoint recorded `Oscar.Kiss` as a **Member** (not guest) of `OscarKisshotmail482.onmicrosoft.com`, which would be a different relationship pattern than every other tenant found (all guest/#EXT# except the native `Oszkar@...465` identity). This was **not re-verified with fresh artifacts this pass** and remains the single most important open contradiction. (UNRESOLVED — HIGH PRIORITY)
+
+## Unsupported Previous Claims
+- The unqualified statement "account traced back to 2014" (implying creation date) is **not supported** by any artifact found. Corrected to an inferred existence lower-bound only (see above).
+
+## High-Value Unresolved Leads
+1. **Tenant `23ed74b0-...` / `OscarKisshotmail482.onmicrosoft.com`** — re-verify current Member/guest status live; determine why this differs from every other tenant relationship found. Highest-value lead this pass.
+2. **`Domain:target=app` credential** (username `92531aa2-ce8e-47c7-bbbd-70db41520b0e`, a raw GUID) — not yet identified; likely an OAuth client/app registration ID, worth resolving.
+3. **MyWorkSpace67 actual risky-user/risky-sign-in details** — the digest email only proves an alert was sent, not its contents; live portal check needed.
+4. **`oscar` profile's registry hive (NTUSER.DAT)** — not mounted/inspected this pass; may contain a second Outlook profile or additional identity cache entries not visible from file-system-only inspection.
+
+## Next Five Investigative Actions
+1. Log into `entra.microsoft.com/OscarKisshotmail482.onmicrosoft.com` (or via tenant switcher) and check current role/membership for `Oscar.Kiss@hotmail.com` — resolves the highest-priority contradiction above.
+2. Log into `entra.microsoft.com` for `MyWorkSpace67.onmicrosoft.com` → Identity Protection → Risky sign-ins/Risky users to see the actual digest contents.
+3. Resolve the `92531aa2-...` GUID credential — check `Get-MsalTokenCache`/installed app registrations if accessible, or cross-reference against Azure App Registrations under owned tenants.
+4. If further Outlook/Exchange registry evidence is wanted from the `oscar` profile, explicitly authorize a `reg load` of its NTUSER.DAT as a separate, deliberate step (not performed automatically per the read-only-first rule).
+5. Investigate the WsiAccount timestamp inconsistency (password set before profile folder existed) to rule out a migrated/restored account artifact.
+
+---
