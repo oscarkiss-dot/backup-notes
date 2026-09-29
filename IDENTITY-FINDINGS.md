@@ -570,3 +570,95 @@ No stronger artifact than the previously found 2014-08-15 message timestamp was 
 10. **Single most likely artifact to resolve the remaining chain?** A **fresh live Entra portal check** of `OscarKisshotmail482.onmicrosoft.com`'s Users blade for the exact current "User type" and Object ID of the Hotmail-derived account — this is the one piece of evidence that would convert the #1 open contradiction from UNRESOLVED to VERIFIED or DISPROVEN.
 
 ---
+
+---
+
+# OSIE BLACK HISTORICAL RECONSTRUCTION (2026-09-29)
+
+**Scope note applied throughout:** per the user's explicit correction, `OscarKisshotmail465.onmicrosoft.com` (tenant `c194dd61`) is treated strictly as RECENT and is NOT used to establish any historical claim in this section. As shown below, this caution turns out to be moot for the Osie Black chain specifically — Osie Black was never linked to that tenant in any captured evidence.
+
+## Earliest Verified Osie Black Evidence
+**Date: 2026-07-06T03:09:00Z.** Artifact: `C:\Users\oscar\Downloads\History.json` (browser history export), containing two entries: `"TextPlus Microsoft app"` and `"TextPlus bundle"`. This is the earliest **locally-dated** reference found anywhere to any Osie-Black-organization asset (the TextPlus app). No artifact predating 2026 was found. Classification: **CORROBORATED** (browser history timestamp, not an account-creation date).
+
+## All Osie Black Accounts / Organizations
+Kept strictly distinct — only **one** entity was found:
+- **Microsoft App Center organization** `Osie Black` (`appcenter.ms/orgs/Osie-Black`) — sole Admin/Collaborator `Oscar.Kiss@hotmail.com`, containing 2 apps (`Mac`, `TextPlus`), linked to 2 Azure subscriptions (`f2aa2ed7-9c32-4b6d-9fa5-cd3284de9ceb`, `57c25f8f-b37a-4455-bae8-6991b87c7213`). **VERIFIED** (screenshot + Azure CLI object-ID cross-match, prior session, commits `a1d6b14`/`3c7c8a3`).
+- A separate, **unconfirmed** name-similar lead: `rosie.black@live.ca`, mentioned only in a prior self-inspection log tied to Xbox/App Center metadata — **not** established as the same identity. **UNRESOLVED.**
+
+No evidence was found of Osie Black existing as a WordPress profile, Gravatar identity, GitHub organization, or website owner — see below.
+
+## WordPress Association
+**No connection found.** Exhaustive search of both Windows profiles (files, registry, browser history/bookmarks/autofill, email, cached HTML) found **zero** occurrences of "wordpress" tied to the user or Osie Black — the only "wordpress" string hits anywhere on the machine were unrelated developer-tool documentation (Cloudflare/Vercel skill files) and npm package metadata, confirmed irrelevant. Classification: **DISPROVEN locally** (i.e., no supporting evidence exists on this machine; a live WordPress.com/Gravatar account check is the only way to fully rule it in or out).
+
+## `phenomenal` Username
+**UNRESOLVED — no supporting artifact found.** The string "phenomenal" appears nowhere on this machine except in the user's own investigative directive text. There is no basis to associate it with Osie Black, WordPress, or any Microsoft identity from local evidence.
+
+## WordPress Sites
+None found. `29-WordPress-Sites.csv` is empty of results — no cached site list, no `my.wordpress.com/sites` export, no site ID/slug of any kind was located locally.
+
+## Gravatar Association
+None found. No Gravatar hash, avatar URL, or profile reference tied to Osie Black, phenomenal, Oscar Kiss, or Oszkar Kiss exists in any locally accessible artifact.
+
+## App Center Association
+**VERIFIED** (carried forward from the prior session's screenshot- and Azure-CLI-confirmed findings, independently corroborated this pass by two new artifacts): the Azure Portal's own local settings cache (`OneDrive\Documents\settings.json` and a prior-session attachment `...-oa settings.json`) contains **user-created saved search filters** literally named "Osie Black" (one keyed by subscription *name*, one by subscription *ID* — `57c25f8f-b37a-4455-bae8-6991b87c7213`, exactly matching one of the two subscriptions already known to be linked under the App Center org's "Manage > Azure" page). The same cache file's `searchHistory` array shows the user typing "Osie black" into the Azure Portal's own search box on two separate occasions. This is strong, independent, non-screenshot corroboration of the org's real, self-managed existence.
+
+## TextPlus Association
+**VERIFIED.** TextPlus is one of exactly two applications inside the Osie Black App Center organization (screenshot-confirmed, prior session). Earliest local reference: browser history entries dated 2026-07-06 (see above).
+
+## GitHub Association
+**None found.** No local Git repository, GitHub CLI cache, or VS Code GitHub extension state references Osie Black, phenomenal, or TextPlus — other than this investigation's own reporting repository (`oscarkiss-dot/backup-notes`), which is self-referential (created *for* this investigation) and does not count as independent evidence.
+
+## Email Associations
+**None found.** No `.eml`/`.msg`/PST-derived artifact anywhere shows "Osie Black" or "phenomenal" used as a From/To/Reply-To display name, signature, or service-notification identity.
+
+## Domains
+Only `appcenter.ms` (Microsoft's own SaaS domain, not a personally-registered domain) was found associated with Osie Black. No other domain, WordPress subdomain, or third-party site was found. This reconfirms the earlier-closed finding that "osieblack" was never a registered domain/tenant name (bulk tenant lookup previously returned "Invalid tenant ID or domain").
+
+## Historical Timeline
+| Date | Event | Source |
+|---|---|---|
+| 2026-07-06 | Earliest local TextPlus browser-history reference | `History.json` |
+| 2026-09-16 | Azure Activity Log: App Center service principal role-assignment attempts | Prior session, Azure Activity Log |
+| 2026-09-18 | Osie Black org, TextPlus/Mac apps, sole-admin status, 2 linked subscriptions all screenshot-confirmed | Commits `a1d6b14`, `3c7c8a3` |
+| 2026-09-18 | User directly confirms self-creation ("experimenting with App Center") | Chat record, commit `381dac9` |
+| 2026-09-22 | Access-recovery screenshots; tenant `482` first recorded (unrelated finding) | Checkpoint 002 |
+| 2026-09-29 | This reconstruction pass — no new dates found, negative WordPress/Gravatar/phenomenal result confirmed | This session |
+
+## Evidence Predating Recent Tenant 465
+**None applicable.** Tenant `465` (`c194dd61`) was never linked to Osie Black in any captured evidence — Osie Black's two confirmed subscriptions belong to `c8553249` and a second tenant. The user's recency-caution about tenant `465` therefore does not affect any Osie Black finding.
+
+## Contradictions
+See `32-OsieBlack-Contradictions.md` for the full point-by-point analysis. Summary: the App Center/TextPlus chain is solid and closed; the WordPress/phenomenal/Gravatar chain has zero supporting evidence; a name-similar but unverified `rosie.black@live.ca` lead remains open.
+
+## Strongest Identity Chain
+```
+Oscar.Kiss@hotmail.com
+  → [screenshot + Azure CLI object-ID match, 2026-09-18]
+  → Sole Admin/Collaborator of App Center org "Osie Black"
+  → [screenshot-confirmed app list, 2026-09-18]
+  → Owns application "TextPlus"
+  → [browser history, 2026-07-06 — earliest known date]
+```
+No further edges (→ phenomenal → WordPress → site/domain) can be added — each would require evidence that does not exist locally.
+
+---
+
+## REQUIRED FINAL ANSWERS
+
+1. **Oldest VERIFIED occurrence of "Osie Black"?** 2026-07-06 (TextPlus browser-history entries; the org name itself is first screenshot-confirmed 2026-09-18).
+2. **Where exactly did it appear?** `C:\Users\oscar\Downloads\History.json` (browser history export) for the earliest date; `appcenter.ms/orgs/Osie-Black` for the organization itself.
+3. **Is `phenomenal` VERIFIED as an Osie Black WordPress username?** No — **UNRESOLVED, no supporting evidence found anywhere.**
+4. **What artifact proves or suggests that association?** None. Zero co-occurrence of the two terms in any artifact except the user's own directive text.
+5. **What WordPress sites are associated with it?** None found.
+6. **Is there a Gravatar identity associated with it?** None found.
+7. **What email addresses are independently linked to Osie Black?** Only `Oscar.Kiss@hotmail.com` (sole confirmed Admin). A name-similar `rosie.black@live.ca` is an unverified, separate lead.
+8. **Is the App Center "Osie Black" organization historically older than tenant `465`?** Cannot be determined precisely (no creation-date artifact for either exists), but it is **moot**: Osie Black was never linked to tenant `465` at all.
+9. **What GitHub identities or repositories connect to it?** None, other than this investigation's own self-referential reporting repository.
+10. **What domains connect to it?** Only `appcenter.ms` (Microsoft's own domain).
+11. **Which findings predate 2026?** None in this Osie Black reconstruction — every dated artifact falls in 2026 (2026-07 through 2026-09).
+12. **Which findings predate 2021?** None.
+13. **Single strongest artifact connecting two otherwise separate Osie Black identity systems?** The Azure Portal's own local settings cache tying the saved filter name "Osie Black" directly to subscription ID `57c25f8f-...` — the exact same subscription already independently confirmed linked under the App Center org's Azure management page. This connects the "Azure side" and "App Center side" of the same organization via two independent local artifacts.
+14. **What is still unproven?** Any WordPress/Gravatar/phenomenal connection (no evidence at all); the org's true creation date; whether `rosie.black@live.ca` is the same identity.
+15. **What next READ-ONLY source would most likely produce the breakthrough?** A live, authenticated check of `https://wordpress.com/me` / `https://public-api.wordpress.com/rest/v1/me/` and `https://en.gravatar.com/phenomenal` (if such a WordPress.com account is ever actually signed into on this or another device) — this cannot be performed from local disk artifacts alone, since none exist.
+
+---
