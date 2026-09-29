@@ -502,3 +502,71 @@ No new application-account correlations found beyond what's previously logged (A
 5. Investigate the WsiAccount timestamp inconsistency (password set before profile folder existed) to rule out a migrated/restored account artifact.
 
 ---
+
+---
+
+# TARGETED CONTRADICTION-RESOLUTION PASS (2026-09-29, continuing from `7bc0eb6`)
+
+## Objective A/B/C — OscarKisshotmail482.onmicrosoft.com: UNRESOLVED (no local corroboration found)
+Searched every OneAuth cache, IdentityCRL registry key, AAD Broker package, and TokenBroker cache on **both** the `LENOVO` and `oscar` Windows profiles, plus all prior evidence CSVs and session records, for tenant `23ed74b0-4708-4f7b-814d-89aa25583f9` / `OscarKisshotmail482.onmicrosoft.com`. **Zero local artifacts reference this tenant anywhere on this machine.** The only source that has ever recorded it is a prior session checkpoint transcribing user-provided screenshots — no object ID was ever captured, only the tenant ID and the on-screen UPN string.
+
+**Important contradiction within the original source itself**: the UPN shown was `Oscar.Kiss_hotmail.com#EXT#@OscarKisshotmail482.onmicrosoft.com` — this is the standard Entra **guest** naming pattern (`#EXT#`) — yet the checkpoint's "User type" column reportedly showed **Member**. Two explanations are possible, both unproven:
+1. A genuine **converted guest-to-member** account (a real, documented Entra behavior: converting a guest to a member does not regenerate the `#EXT#` UPN), or
+2. A misread/mistranscribed screenshot detail from the prior session.
+
+**This cannot be upgraded past UNRESOLVED without a fresh, live check** (Entra portal → that tenant → Users → this account's exact "User type" field) or the original screenshot files, which were not retained in the session workspace.
+
+## Objective D — `oscar` Profile Registry: Directly Inspected (Live Hive Access)
+The `oscar` session was found to be **disconnected but not logged off** (`query user` showed session state `Disc`), meaning its `NTUSER.DAT` hive remains loaded live under `HKEY_USERS`. This allowed genuine read-only registry inspection without mounting/loading any offline hive.
+
+**Key findings:**
+- **Real classic Outlook MAPI profiles exist** on `oscar` (`"Outlook"`, `"NewOutlook-ProfileForPstFiles-Iter1"`) — the `LENOVO` profile has **zero** Outlook profiles by contrast.
+- Decoded MAPI service entries show these profiles configure only: (1) an **iCloud mail connector** (Apple's `APLZOD64.dll`) and (2) a generic **"Outlook Data File" PST** pointing to `Outlook1.pst`. **No live Exchange/Hotmail account is actually configured as an active mail-fetching account** in classic Outlook on this machine.
+- **`IdentityCRL\UserTileData`** contains the value name `00064000E2621A80` — this **exactly matches** the `LegacyExchangeDN cn=` value found in `InboxRules.txt`. This is a genuine cross-artifact corroboration linking that Exchange mailbox identity to the `oscar` Windows profile's own account tile cache.
+- **Three cached OneAuth account objects found on `oscar`** (vs. one on `LENOVO`):
+  - `andrea.lakatos@windowslive.com` — a **fully realized MSA account object**, display name "Andrea Lakatos" — this is a genuinely **separate person's** Microsoft account cached on this shared PC, not an alias of Oscar Kiss.
+  - `Admin@OscarKisshotmail465.onmicrosoft.com` — object ID `d12d2bab-5f9c-4ff3-aaf3-081c28997865`, a **third** distinct account object in tenant `c194dd61`, alongside the previously found `Oszkar@...` — relationship between these two same-tenant identities not established.
+  - Identity-provider hint files show `pianist_oscer@hotmail.com` classified `MSAccount` (a real Microsoft account type), while `pianist_oscer@outlook.com` and `pianist_oscer@gmail.com` are classified `Neither` — meaning those were **typed into a sign-in box but did not resolve to a valid Microsoft account** at the time. One unusual entry, `60.inner.cordial@icloud.com`, is classified `OrgId` (typed into a work/school sign-in box) — flagged as low-confidence, not confirmed as belonging to the user.
+
+## Objective E — Alias Classification (Corrected)
+| Address | Type | Evidence | Classification |
+|---|---|---|---|
+| `Oscar.Kiss@hotmail.com` | Primary MSA + Exchange-backed consumer mailbox | OneAuth MSA object + Exchange export + UserTileData match | **VERIFIED** |
+| `oscar.kiss@outlook.com` | Possible alias | Carried forward only, not re-verified this pass | **INFERRED** |
+| `pianist_oscer@outlook.com` | Sign-in attempt only, NOT proven owned | identity-provider hint = `Neither` | **DOWNGRADED — UNRESOLVED** |
+| `pianist_oscer@hotmail.com` | MSA sign-in attempt (valid account type) | identity-provider hint = `MSAccount` | **CORROBORATED** (stronger than the outlook.com variant, but still just a hint cache) |
+| `Oszkar@OscarKisshotmail465.onmicrosoft.com` | Distinct native Entra member | OneAuth object, `idtyp=user` | **VERIFIED** |
+| `Admin@OscarKisshotmail465.onmicrosoft.com` | Distinct Entra account, same tenant | OneAuth object on `oscar` profile | **CORROBORATED** (role/type not captured) |
+| `andrea.lakatos@windowslive.com` | Separate person's MSA — **NOT an alias of Oscar Kiss** | Full OneAuth account object | **VERIFIED** |
+
+## Objective F — Exchange Mailbox Correlation: Resolved
+The `LegacyExchangeDN` pattern `/o=First Organization/ou=Exchange Administrative Group(FYDIBOHF23SPDLT)/...` is the **standard default-organization identifier used across all Microsoft-hosted Exchange backends**, including the native **consumer Outlook.com/Hotmail mailbox infrastructure** (consumer Hotmail/Outlook.com mailboxes have run on real Exchange Online backend servers since Microsoft's ~2013 consumer-mail migration). Combined with the `UserTileData` registry corroboration on the `oscar` profile, the best-supported conclusion is:
+
+**Mailbox GUID `00064000-e262-1a80-0000-000000000000` is the native consumer Outlook.com/Hotmail mailbox belonging to `Oscar.Kiss@hotmail.com` itself — NOT a Microsoft 365 Business/Exchange-Online-for-business mailbox belonging to any of the three Entra tenants** (`c8553249` / `c194dd61` / `14711b58`). **CORROBORATED.**
+
+## Objective G — Account Creation vs. Historical Use (reaffirmed)
+No stronger artifact than the previously found 2014-08-15 message timestamp was located this pass. The correction from the prior pass stands: this is a **message-sent date**, not an account-creation date, and remains the earliest verified **lower bound** of mailbox existence.
+
+## Objective H — Decision Matrix
+| Identity | Address/UPN | Type | Tenant | Object ID | Mailbox | Windows SID Link | Evidence Strength | Open Questions |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `Oscar.Kiss@hotmail.com` | MSA + consumer Exchange mailbox | Personal (`9188040d`) | `b7c7f198a4ce6340` | `00064000-e262-1a80-...` | LENOVO + oscar (both profiles cache this account) | VERIFIED | None major |
+| 2 | `Oscar.Kiss@hotmail.com` (guest rep.) | AAD Guest | `c8553249` | `2a8e7ac3-...` | — | LENOVO | VERIFIED (same person, different object) | — |
+| 3 | `Oszkar@OscarKisshotmail465.onmicrosoft.com` | AAD native Member | `c194dd61` | `ef8c8bef-...` | — | LENOVO | VERIFIED | Relationship to Admin@ below |
+| 4 | `Admin@OscarKisshotmail465.onmicrosoft.com` | AAD (type uncaptured) | `c194dd61` | `d12d2bab-...` | — | oscar | CORROBORATED | Same person as #3, or separate admin identity? |
+| 5 | `andrea.lakatos@windowslive.com` | MSA — separate person | Personal | `2fbe37e39361df6e` | — | oscar | VERIFIED | Not part of this investigation's subject |
+| 6 | `OscarKisshotmail482` object | Unknown | `23ed74b0-...` | **not captured** | — | — | **UNRESOLVED** | Entirely screenshot-sourced; no local corroboration exists |
+
+## Final Answers
+1. **Is `OscarKisshotmail482.onmicrosoft.com` independently verified?** No — zero local artifacts corroborate it; the only source is a prior screenshot-derived checkpoint.
+2. **Exact Tenant ID?** `23ed74b0-4708-4f7b-814d-89aa25583f9` (from the screenshot record only).
+3. **What exact object represented me there?** Unknown — only the UPN string was captured, no object ID.
+4. **Was it really "Member," and what proves it?** Unproven. The UPN itself uses the `#EXT#` guest-naming pattern, contradicting the reported "Member" type label. Most likely explanations: a converted guest-to-member account, or a transcription artifact — cannot be resolved without a fresh live check.
+5. **Is it distinct from `Oszkar@OscarKisshotmail465.onmicrosoft.com`?** Yes — different domain (`482` vs `465`), different tenant ID, no shared object ID found anywhere.
+6. **Which aliases are true aliases vs. separate accounts?** True same-person aliases: `Oscar.Kiss@hotmail.com` (all its representations). Genuinely **separate accounts**, not aliases: `Oszkar@...465`, `Admin@...465`, and definitively `andrea.lakatos@windowslive.com` (a different person entirely).
+7. **Which identity owns Mailbox GUID `00064000-e262-1a80-...`?** `Oscar.Kiss@hotmail.com`'s own native consumer Outlook.com/Hotmail mailbox — not any business tenant.
+8. **Did the `oscar` profile reveal an older Microsoft identity?** No identity older than what was already known, but it revealed **additional identities not previously visible from the `LENOVO` profile alone** (`Admin@...465`, `andrea.lakatos@...`, plus sign-in-attempt hints for `pianist_oscer@hotmail.com`/`gmail.com`/`outlook.com`).
+9. **Oldest verified identity evidence?** Unchanged: 2014-08-15 message timestamp (lower bound only).
+10. **Single most likely artifact to resolve the remaining chain?** A **fresh live Entra portal check** of `OscarKisshotmail482.onmicrosoft.com`'s Users blade for the exact current "User type" and Object ID of the Hotmail-derived account — this is the one piece of evidence that would convert the #1 open contradiction from UNRESOLVED to VERIFIED or DISPROVEN.
+
+---
