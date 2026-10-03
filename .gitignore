@@ -1,0 +1,10 @@
+# Backup exports and temporary outputs
+exports/
+*.ndjson
+*.jsonl
+*.tar
+*.zip
+
+# Local env files
+.env
+.env.*
