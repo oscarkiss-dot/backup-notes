@@ -662,3 +662,51 @@ No further edges (→ phenomenal → WordPress → site/domain) can be added —
 15. **What next READ-ONLY source would most likely produce the breakthrough?** A live, authenticated check of `https://wordpress.com/me` / `https://public-api.wordpress.com/rest/v1/me/` and `https://en.gravatar.com/phenomenal` (if such a WordPress.com account is ever actually signed into on this or another device) — this cannot be performed from local disk artifacts alone, since none exist.
 
 ---
+
+## Exchange Online Subscription Trace (no mailbox access) — 2026-10-13
+
+**Problem:** A single user forgot the Exchange Online login; Microsoft Support says "contact your Admin". No mailbox data is available. Billing and identity records do not depend on the mailbox, so the subscription can be traced from them.
+
+### Runbook (read-only until step 4)
+
+1. **Identify the tenant without signing in** (use the email domain or the `*.onmicrosoft.com` domain)
+   - `https://login.microsoftonline.com/<domain>/.well-known/openid-configuration` — the tenant ID is in the issuer URL.
+   - `https://login.microsoftonline.com/getuserrealm.srf?login=<email>&xml=1` — shows Managed / Federated / consumer (`NameSpaceType`).
+   - `nslookup -type=mx <domain>` — an MX ending in `mail.protection.outlook.com` confirms Exchange Online.
+   - `nslookup -type=txt <domain>` — a `MS=msXXXXXXXX` record confirms the domain is verified in a Microsoft tenant.
+   - Compare the tenant ID with the known tenants in this file: `c8553249…` (201), `c194dd61…` (465), `14711b58…` (MyWorkSpace), `23ed74b0…` (482).
+2. **Find the subscription owner through billing records**
+   - Search every reachable inbox for `microsoft-noreply@microsoft.com`, "Microsoft 365 invoice" and "Your subscription".
+   - Search bank and card statements for "MICROSOFT*" charges.
+   - Invoices show the tenant domain, billing account ID, order or subscription ID and billing admin email.
+   - If it was bought through a reseller (for example GoDaddy), check that account's Microsoft 365 or email products. They are managed there, not in the Microsoft admin centre.
+3. **Check whether any known identity is Global Admin**
+   - Try `Admin@<tenant>.onmicrosoft.com` or the `#EXT#` guest form at `https://admin.microsoft.com` or `https://portal.azure.com` with the tenant-specific URL.
+   - Check Billing > Your products, Users > Active users and Roles > Global Administrator. Any admin can reset the locked-out user.
+   - Also check Entra ID > Users and run `az account tenant list`.
+4. **Recover if there is no admin**
+   - "Contact your admin" means the tenant exists and this user is not an admin. The admin is probably another of the user's own accounts.
+   - Start with the sign-up Microsoft account (`Oscar.Kiss@hotmail.com`) and `https://account.live.com/password/reset`.
+   - Then go to `https://support.microsoft.com` > Contact us > Microsoft 365 Admin Center / Billing and request "Admin / Global admin recovery". Quote the invoice, tenant ID or domain, and the payment method.
+   - Cite Microsoft Support case `2608290040000285`.
+   - Ask for the domain-based tenant admin takeover. For an unmanaged tenant or custom domain, adding a TXT record in DNS proves ownership and allows the takeover.
+5. **Record results in the table below.**
+
+### Findings template (fill in as evidence is gathered)
+
+| Item | Value |
+|---|---|
+| Exchange domain / email | _TBD_ |
+| Tenant ID | _TBD_ |
+| Realm type (managed/federated/consumer) | _TBD_ |
+| MX points to Exchange Online | _TBD_ |
+| Matches known tenant | _TBD_ |
+| Invoice / order / subscription ID | _TBD_ |
+| Billing admin email | _TBD_ |
+| Reseller (e.g. GoDaddy) | _TBD_ |
+| Global Admin identified | _TBD_ |
+| Support case / outcome | _TBD_ |
+
+**Status:** runbook recorded. The Exchange domain and email are not yet known, so no lookups have been run. No tenant or invoice data has been verified.
+
+---
