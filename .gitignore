@@ -9,6 +9,12 @@ summary.md
 subscription-timeline*.csv
 subscription-timeline*.json
 subscription-review-*/
+mailbox-review*/
+mailbox-review.json
+BulkActions.txt
+InboxRules.txt
+LegacySettings.txt
+Mailbox.xml
 *.eml
 *.pst
 *.ost

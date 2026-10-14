@@ -1,6 +1,12 @@
 # backup-notes
 backup and restore checklist for github and app center
 
+## Mailbox export review
+
+`scripts/mailbox_exports.py` reads mailbox action/rule exports and legacy settings
+offline, retaining source hashes and raw claims. It separates CRM schema definitions
+from actual mailbox exports. See [the mailbox export guide](docs/MAILBOX-EXPORTS.md).
+
 ## Exchange evidence tracing
 
 See [the recovery guide](docs/EXCHANGE-RECOVERY.md) for the account-specific recovery
