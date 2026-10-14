@@ -29,3 +29,6 @@ Mailbox.xml
 *token-cache*
 __pycache__/
 *.py[cod]
+
+AcerRecovery-*/
+acer-recovery.json

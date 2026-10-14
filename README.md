@@ -1,6 +1,13 @@
 # backup-notes
 backup and restore checklist for github and app center
 
+## Windows recovery search
+
+`scripts/Find-AcerRecovery.ps1` locates surviving mail stores, document recovery copies,
+backups and configuration paths on Windows. It reads metadata, reports incomplete
+coverage, and does not modify source files or restore deleted data. See the
+[run instructions and limits](docs/ACER-RECOVERY.md).
+
 ## Mailbox export review
 
 `scripts/mailbox_exports.py` reads mailbox action/rule exports and legacy settings
